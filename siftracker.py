@@ -12,6 +12,14 @@ def new_cursor():
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     return cur
 
+class ReverseProxy(object):
+    def process_request(self, req, resp, **params):
+        script_name = req.get_header('X-Script-Name')
+        if script_name:
+            path = req.path
+            if path.startswith(script_name):
+                req.path = path[len(script_name):]
+
 class Ranking(object):
     def on_get(self, req, resp, event_id):
         limit = req.get_param_as_int('limit') or 100
@@ -30,6 +38,5 @@ class Ranking(object):
         resp.body = json.dumps(rankings)
 
 
-api = application = falcon.API()
-ranking = Ranking()
-api.add_route('/ranking/{event_id}', ranking)
+api = application = falcon.API(middleware = ReverseProxy())
+api.add_route('/ranking/{event_id}', Ranking())
