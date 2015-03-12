@@ -37,6 +37,15 @@ class Ranking(object):
             raise falcon.HTTPNotFound()
         resp.body = json.dumps(rankings)
 
+class HistoryUser(object):
+    def on_get(self, req, resp, event_id, user_id):
+        c = new_cursor()
+        c.execute("SELECT step,rank,name,score FROM rankings WHERE event_id = %(event_id)s AND user_id = %(user_id)s ORDER BY step", {'event_id': event_id, 'user_id': user_id})
+        history = c.fetchall()
+        if not history:
+            raise falcon.HTTPNotFound()
+        resp.body = json.dumps(history)
 
 api = application = falcon.API(middleware = ReverseProxy())
 api.add_route('/ranking/{event_id}', Ranking())
+api.add_route('/history_user/{event_id}/{user_id}', HistoryUser())
