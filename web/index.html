@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="siftracker">
+    <head>
+        <title>LLSIF Tracker - EN</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="kube.min.css" />
+        <link rel="stylesheet" href="fonts.css" />
+        <link rel="stylesheet" href="tracker.css" />
+        <style type="text/css">
+            .muffin {
+                background: #1f1f1f;
+                color: #dfdfdf;
+                padding: 0.4em;
+                z-index: 3;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+            }
+            .logo { width: 96px; }
+            .muffin-logo, .muffin-logo:hover, .muffin-logo:active {
+                color: #dfdfdf;
+                text-decoration: none;
+                font-size: 1.2em;
+            }
+            #event {
+                background: transparent;
+                border: 2px solid #afafaf;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                text-overflow: '';
+                color: #dfdfdf;
+                padding: 0.4em;
+            }
+            .event-form { display: table-cell; }
+            *, select { font-family: "Noto Sans Japanese", "Noto Sans", sans-serif; }
+            .logo-container { display: table; }
+            .logo-container div { display: table-cell; vertical-align: middle; }
+            .basket {
+                bottom: 0;
+                overflow: auto;
+                position: absolute;
+                top: 60px;
+                width: 100%;
+                background: #0f0f0f;
+                color: #dfdfdf;
+            }
+            .player-row {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+                padding: 0.1em 0.5em;
+            }
+            .player-row > * {
+                display: table-cell;
+            }
+            .player-row-even {
+                background: #5f5f5f;
+            }
+            .player-rank {
+                width: 15%;
+            }
+            .player-name {
+            }
+            .player-score {
+                text-align: center;
+            }
+            .ranks {
+                -moz-column-count: 5;
+                -webkit-column-count: 5;
+                column-count: 5;
+            }
+        </style>
+    </head>
+    <body>
+
+<div class="units-container muffin">
+    <div class="units-row end">
+        <div class="unit-100 logo-container">
+            <div class="logo text-centered">
+                <!-- logo from http://www.pixiv.net/member_illust.php?mode=medium&illust_id=37955793 -->
+                <img src="images/logo.png" alt="SIF Tracker" />
+            </div>
+            <div class="">
+                <a class="bold muffin-logo" href="">SIF Tracker</a>
+            </div>
+            <div class="event-form">
+                <form class="forms end">
+                    <select id="event"><option>17: Fifth Round Score Match (Rin)</option></select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="basket">
+    <div class="ranks" ng-view></div>
+</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-resource.js"></script>
+<script type="text/javascript" src="tracker.js"></script>
+
+<script type="text/ng-template" id="partials/ranking-list.html">
+    <span class="player-row" ng-class-even="'player-row-even'" ng-repeat="player in ranking | orderBy:orderProp">
+        <div class="player-rank">{{player.rank}}</div>
+        <div class="player-name">{{player.name}}</div>
+        <div class="player-score">{{player.score}}</div>
+    </div>
+</script>
+
+    </body>
+</html>
