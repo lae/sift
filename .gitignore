@@ -1,0 +1,6 @@
+__pycache__/
+config.yaml
+
+*.swp
+*.swo
+
