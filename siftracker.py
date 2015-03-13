@@ -15,7 +15,7 @@ def new_cursor():
 
 region = make_region().configure(
     'dogpile.cache.pylibmc',
-    expiration_time = 60,
+    expiration_time = 900,
     arguments = {
         'url':["127.0.0.1:11211"],
         'binary': True,
@@ -73,7 +73,7 @@ class HistoryUser(object):
         resp.body = json.dumps(history)
 
 class HistoryUserEvents(object):
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(expiration_time=14400)
     def get_history_user_events(self, user_id):
         c = new_cursor()
         c.execute("SELECT s.* FROM (SELECT * FROM generate_series(3, (SELECT max(event_id) FROM rankings))) u(ev), lateral (SELECT event_id FROM rankings WHERE event_id = ev AND user_id = %(user_id)s LIMIT 1) s", {'user_id': user_id})

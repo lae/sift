@@ -26,7 +26,7 @@ angular.module('siftracker')
             $scope.prev_page = $scope.page - 1;
             $scope.ranking = Ranking.query({
                 eventId: $scope.event_id,
-                limit: 500,
+                limit: 100,
                 page: $scope.page
             });
             $scope.orderProp = 'rank';

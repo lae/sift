@@ -21,7 +21,7 @@
                 height: 60px;
             }
             .logo { width: 96px; }
-            .muffin-logo, .muffin-logo:hover, .muffin-logo:active {
+            .muffin-logo, .muffin-logo:hover, .muffin-logo:active .muffin-logo:focus {
                 color: #dfdfdf;
                 text-decoration: none;
                 font-size: 1.2em;
@@ -36,6 +36,9 @@
             }
             .navigation-header a {
                 padding: 0.3em 2em;
+            }
+            .history-user-event-links a {
+                padding: 0.3em 0.5em;
             }
             .navigation-header a:hover {
                 background: #3f3f3f;
@@ -120,9 +123,9 @@
                 text-align: center;
             }
             .ranks {
-                -moz-column-count: 4;
-                -webkit-column-count: 4;
-                column-count: 4;
+                -moz-column-count: 3;
+                -webkit-column-count: 3;
+                column-count: 3;
                 margin-top: 28px;
                 padding-bottom: 5em;
             }
@@ -146,8 +149,7 @@
             <div class="event-form">
                 <form class="forms end" style="display: inline-block;">
                     <select id="event"><option>19: Sixth Round Score Match (Nico)</option></select>
-                </form>&nbsp;&nbsp;&nbsp;
-                Cutoffs will be slow for a while. Please don't abuse it.
+                </form>&nbsp;&nbsp;&nbsp;(still in development)
             </div>
             <div class="muffin-link">
                 <a href="#/ranking">Current Ranking</a>
@@ -196,7 +198,7 @@
 </div>
 </script>
 <script type="text/ng-template" id="partials/history-user.html">
-<div class="navigation-header">
+<div class="navigation-header history-user-event-links">
     <span>events:</span>
     <a ng-repeat="ev in played_events" href="#/history_user/{{ev}}/{{user_id}}">{{ev}}</a>
 </div>
