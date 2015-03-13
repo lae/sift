@@ -48,15 +48,17 @@ class HistoryUser(object):
 
 class Cutoff(object):
     def on_get(self, req, resp, event_id):
-        cutoff_marks = (1,600,3000,6000,12000)
+        #cutoff_marks = (1,600,3000,6000,12000)
+        cutoff_marks = [1,600,3000,6000,12000]
         c = new_cursor()
-        c.execute("SELECT step,rank,score FROM rankings WHERE event_id = %(event_id)s AND rank IN %(ranks)s", {'event_id': event_id, 'ranks': cutoff_marks})
+#        c.execute("SELECT step,rank,score FROM rankings WHERE event_id = %(event_id)s AND rank IN %(ranks)s", {'event_id': event_id, 'ranks': cutoff_marks})
+        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s", {'event_id': event_id, 'ranks': cutoff_marks})
         results = c.fetchall()
         if not results:
             raise falcon.HTTPNotFound()
         cutoffs = [{"step": step} for step in set(sorted([item['step'] for item in results]))]
         for item in results:
-            tier = "tier_{}".format(cutoff_marks.index(int(item['rank'])))
+            tier = "tier_{}".format(cutoff_marks.index(int(item['desired_rank'])))
             score = item['score']
             step = item['step']
             for s in cutoffs:

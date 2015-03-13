@@ -67,8 +67,12 @@
                 text-align: center;
                 position: fixed;
                 width: 100%;
-                height: 24px;
+                height: 29px;
                 background: #1f1f1f;
+            }
+            .navigation-header span {
+                margin: auto 1.612em;
+                display: inline-block;
             }
             .blanket {
                 bottom: 0;
@@ -119,7 +123,7 @@
                 -moz-column-count: 4;
                 -webkit-column-count: 4;
                 column-count: 4;
-                margin-top: 24px;
+                margin-top: 28px;
                 padding-bottom: 5em;
             }
             .invisible {
@@ -140,9 +144,10 @@
                 <a class="bold muffin-logo" href="">SIF Tracker</a>
             </div>
             <div class="event-form">
-                <form class="forms end">
+                <form class="forms end" style="display: inline-block;">
                     <select id="event"><option>19: Sixth Round Score Match (Nico)</option></select>
-                </form>
+                </form>&nbsp;&nbsp;&nbsp;
+                Cutoffs will be slow for a while. Please don't abuse it.
             </div>
             <div class="muffin-link">
                 <a href="#/ranking">Current Ranking</a>
@@ -207,6 +212,13 @@
 </div>
 </script>
 <script type="text/ng-template" id="partials/cutoff-list.html">
+<div class="navigation-header">
+    <span>current cutoff</span>
+    <span>tier 1: <strong>{{cutoffs[cutoffs.length-1].tier_1}}</strong></span>
+    <span>tier 2: <strong>{{cutoffs[cutoffs.length-1].tier_2}}</strong></span>
+    <span>tier 3: <strong>{{cutoffs[cutoffs.length-1].tier_3}}</strong></span>
+    <span>tier 4: <strong>{{cutoffs[cutoffs.length-1].tier_4}}</strong></span>
+</div>
 <div class="ranks">
     <div class="cutoff-row cutoff-header">
         <div class="cutoff-step">Hour</div>
