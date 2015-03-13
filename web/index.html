@@ -25,6 +25,15 @@
                 text-decoration: none;
                 font-size: 1.2em;
             }
+            .muffin-link { width: 10%; }
+            .muffin-link a {
+                color: #ff6f6f;
+                font-size: 1.2em;
+                text-decoration: none;
+            }
+            .muffin-link a:hover {
+                color: #ff9f0f;
+            }
             #event {
                 background: transparent;
                 border: 2px solid #afafaf;
@@ -47,22 +56,22 @@
                 background: #0f0f0f;
                 color: #dfdfdf;
             }
-            .player-row, .step-row {
+            .player-row, .step-row, .cutoff-row {
                 display: table;
                 width: 100%;
                 table-layout: fixed;
                 padding: 0.1em 0.5em;
             }
-            .player-row > *, .step-row > * {
+            .player-row > *, .step-row > *, .cutoff-row > * {
                 display: table-cell;
             }
-            .player-row-even, .step-row-even {
+            .player-row-even, .step-row-even, .cutoff-row-even {
                 background: #5f5f5f;
             }
-            .player-header, .step-header {
+            .player-header, .step-header, .cutoff-row-header {
                 background: #5f2f2f;
             }
-            .player-rank, .step-step, .step-rank {
+            .player-rank, .step-step, .step-rank, .cutoff-step {
                 width: 15%;
             }
             .player-name {
@@ -79,9 +88,9 @@
                 text-align: center;
             }
             .ranks {
-                -moz-column-count: 5;
-                -webkit-column-count: 5;
-                column-count: 5;
+                -moz-column-count: 4;
+                -webkit-column-count: 4;
+                column-count: 4;
             }
         </style>
     </head>
@@ -99,8 +108,14 @@
             </div>
             <div class="event-form">
                 <form class="forms end">
-                    <select id="event"><option>17: Fifth Round Score Match (Rin)</option></select>
+                    <select id="event"><option>19: Sixth Round Score Match (Nico)</option></select>
                 </form>
+            </div>
+            <div class="muffin-link">
+                <a href="#/ranking">Current Ranking</a>
+            </div>
+            <div class="muffin-link">
+                <a href="#/cutoff">Current Cutoffs</a>
             </div>
         </div>
     </div>
@@ -139,6 +154,24 @@
         <div class="step-rank">{{step.rank}}</div>
         <div class="step-name">{{step.name}}</div>
         <div class="step-score">{{step.score}}</div>
+    </div>
+</script>
+<script type="text/ng-template" id="partials/cutoff-list.html">
+    <div class="cutoff-row cutoff-header">
+        <div class="cutoff-step">Hour</div>
+        <div class="cutoff-tier">First</div>
+        <div class="cutoff-tier">Tier 1</div>
+        <div class="cutoff-tier">Tier 2</div>
+        <div class="cutoff-tier">Tier 3</div>
+        <div class="cutoff-tier">Tier 4</div>
+    </div>
+    <div class="cutoff-row" ng-class-even="'cutoff-row-even'" ng-repeat="step in cutoffs | orderBy:orderProp">
+        <div class="cutoff-step">{{step.step}}</div>
+        <div class="cutoff-tier">{{step.tier_0}}</div>
+        <div class="cutoff-tier">{{step.tier_1}}</div>
+        <div class="cutoff-tier">{{step.tier_2}}</div>
+        <div class="cutoff-tier">{{step.tier_3}}</div>
+        <div class="cutoff-tier">{{step.tier_4}}</div>
     </div>
 </script>
 

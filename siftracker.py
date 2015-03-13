@@ -46,6 +46,26 @@ class HistoryUser(object):
             raise falcon.HTTPNotFound()
         resp.body = json.dumps(history)
 
+class Cutoff(object):
+    def on_get(self, req, resp, event_id):
+        cutoff_marks = (1,600,3000,6000,12000)
+        c = new_cursor()
+        c.execute("SELECT step,rank,score FROM rankings WHERE event_id = %(event_id)s AND rank IN %(ranks)s", {'event_id': event_id, 'ranks': cutoff_marks})
+        results = c.fetchall()
+        if not results:
+            raise falcon.HTTPNotFound()
+        cutoffs = [{"step": step} for step in set(sorted([item['step'] for item in results]))]
+        for item in results:
+            tier = "tier_{}".format(cutoff_marks.index(int(item['rank'])))
+            score = item['score']
+            step = item['step']
+            for s in cutoffs:
+                if s['step'] == step:
+                    s[tier] = score
+
+        resp.body = json.dumps(cutoffs)
+
 api = application = falcon.API(middleware = ReverseProxy())
 api.add_route('/ranking/{event_id}', Ranking())
+api.add_route('/cutoff/{event_id}', Cutoff())
 api.add_route('/history_user/{event_id}/{user_id}', HistoryUser())

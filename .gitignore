@@ -4,3 +4,4 @@ config.yaml
 *.swp
 *.swo
 
+log/

@@ -6,6 +6,11 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
                 return $resource( 'ranking/:eventId', {},
                     {query: {method:'GET', params:{},isArray: true}});
             }])
+    .factory('Cutoff', ['$resource',
+            function($resource) {
+                return $resource( 'cutoff/:eventId', {},
+                    {query: {method:'GET', params:{},isArray: true}});
+            }])
     .factory('HistoryUser', ['$resource',
             function($resource) {
                 return $resource( 'history_user/:eventId/:userId', {},
@@ -15,9 +20,15 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
 angular.module('siftracker')
     .controller('RankingCtrl', ['$scope', '$routeParams', 'Ranking',
         function($scope, $routeParams, Ranking) {
-            $scope.event_id = $routeParams.event_id || 19
+            $scope.event_id = $routeParams.eventId || 21
             $scope.ranking = Ranking.query({eventId:$scope.event_id,limit:1000});
             $scope.orderProp = 'rank';
+        }])
+    .controller('CutoffCtrl', ['$scope', '$routeParams', 'Cutoff',
+        function($scope, $routeParams, Cutoff) {
+            $scope.event_id = $routeParams.eventId || 21
+            $scope.cutoffs = Cutoff.query({eventId: $scope.event_id});
+            $scope.orderProp = 'step';
         }])
     .controller('HistoryUserCtrl', ['$scope', '$routeParams', 'HistoryUser',
         function($scope, $routeParams, HistoryUser) {
@@ -33,6 +44,18 @@ angular.module('siftracker')
             when('/ranking', {
                 templateUrl: 'partials/ranking-list.html',
                 controller: 'RankingCtrl'
+            }).
+            when('/ranking/:eventId', {
+                templateUrl: 'partials/ranking-list.html',
+                controller: 'RankingCtrl'
+            }).
+            when('/cutoff', {
+                templateUrl: 'partials/cutoff-list.html',
+                controller: 'CutoffCtrl'
+            }).
+            when('/cutoff/:eventId', {
+                templateUrl: 'partials/cutoff-list.html',
+                controller: 'CutoffCtrl'
             }).
             when('/history_user/:eventId/:userId', {
                 templateUrl: 'partials/history-user.html',
