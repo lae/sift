@@ -40,13 +40,13 @@ angular.module('siftracker')
     .controller('HistoryUserCtrl', ['$scope', '$routeParams', 'HistoryUser', '$http',
         function($scope, $routeParams, HistoryUser, $http) {
             $scope.user_id = $routeParams.userId;
+            $http.get('history_user_events/' + $scope.user_id).success(function(data) {
+                $scope.played_events = data;
+            });
             $scope.history = HistoryUser.query({
                 eventId: $routeParams.eventId,
                 userId: $scope.user_id});
             $scope.orderProp = 'step';
-            $http.get('history_user_events/' + $scope.user_id).success(function(data) {
-                $scope.played_events = data;
-            });
         }])
     .controller('RevisionCtrl', ['$scope', '$http',
         function($scope, $http) {
