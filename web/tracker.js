@@ -20,8 +20,15 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
 angular.module('siftracker')
     .controller('RankingCtrl', ['$scope', '$routeParams', 'Ranking',
         function($scope, $routeParams, Ranking) {
-            $scope.event_id = $routeParams.eventId || 21
-            $scope.ranking = Ranking.query({eventId:$scope.event_id,limit:1000});
+            $scope.event_id = $routeParams.eventId || 21;
+            $scope.page = parseInt($routeParams.page) || 0;
+            $scope.next_page = $scope.page + 1;
+            $scope.prev_page = $scope.page - 1;
+            $scope.ranking = Ranking.query({
+                eventId: $scope.event_id,
+                limit: 500,
+                page: $scope.page
+            });
             $scope.orderProp = 'rank';
         }])
     .controller('CutoffCtrl', ['$scope', '$routeParams', 'Cutoff',
@@ -52,6 +59,10 @@ angular.module('siftracker')
                 controller: 'RankingCtrl'
             }).
             when('/ranking/:eventId', {
+                templateUrl: 'partials/ranking-list.html',
+                controller: 'RankingCtrl'
+            }).
+            when('/ranking/:eventId/:page', {
                 templateUrl: 'partials/ranking-list.html',
                 controller: 'RankingCtrl'
             }).

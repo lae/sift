@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="fonts.css" />
         <link rel="stylesheet" href="tracker.css" />
         <style type="text/css">
+            body { background: #bf4f4f; }
             .muffin {
                 background: #1f1f1f;
                 color: #dfdfdf;
@@ -26,12 +27,18 @@
                 font-size: 1.2em;
             }
             .muffin-link { width: 10%; font-size: 1.2em; }
-            .muffin-link a, .blanket a {
+            .muffin-link a, .blanket a, .navigation-header a {
                 color: #ff6f6f;
                 text-decoration: none;
             }
-            .muffin-link a:hover, .blanket a:hover {
+            .muffin-link a:hover, .blanket a:hover, {
                 color: #ff9f0f;
+            }
+            .navigation-header a {
+                padding: 0.3em 2em;
+            }
+            .navigation-header a:hover {
+                background: #3f3f3f;
             }
             #event {
                 background: transparent;
@@ -51,21 +58,31 @@
                 overflow: auto;
                 position: absolute;
                 top: 60px;
+                bottom: 1em;
                 width: 100%;
                 background: #0f0f0f;
                 color: #dfdfdf;
+            }
+            .navigation-header {
+                text-align: center;
+                position: fixed;
+                width: 100%;
+                height: 24px;
+                background: #1f1f1f;
             }
             .blanket {
                 bottom: 0;
                 overflow: auto;
                 position: absolute;
-                height: 1em;
                 width: 100%;
+                padding: 0;
                 background: #1f1f1f;
                 color: #dfdfdf;
+                line-height: 1.2em;
                 z-index: 3;
                 display: table;
                 text-align: center;
+                font-size: 0.8em;
             }
             .player-row, .step-row, .cutoff-row {
                 display: table;
@@ -102,7 +119,11 @@
                 -moz-column-count: 4;
                 -webkit-column-count: 4;
                 column-count: 4;
+                margin-top: 24px;
                 padding-bottom: 5em;
+            }
+            .invisible {
+                visibility: hidden;
             }
         </style>
     </head>
@@ -133,15 +154,13 @@
     </div>
 </div>
 
-<div class="basket">
-    <div class="ranks" ng-view></div>
-</div>
+<div class="basket ng-view"></div>
 
 <div class="units-container blanket">
     <div class="units-row end">
         <div class="unit-100" ng-controller="RevisionCtrl">
             <div class="unit-push-50 unit-40">
-                siftracker rev#{{revision}} - <a href="https://twitter.com/sleepingkyoto">twitter</a>
+                siftracker.py rev#{{revision}} - <a href="https://twitter.com/sleepingkyoto">twitter</a>
             </div>
         </div>
     </div>
@@ -153,6 +172,12 @@
 <script type="text/javascript" src="tracker.js"></script>
 
 <script type="text/ng-template" id="partials/ranking-list.html">
+<div class="navigation-header">
+    <a href="#/ranking/{{event_id}}/{{prev_page}}" ng-class="{invisible: prev_page < 0}">prev</a>
+    <a href="#/ranking/{{event_id}}" ng-class="{invisible: page < 1}">first</a>
+    <a href="#/ranking/{{event_id}}/{{next_page}}">next</a>
+</div>
+<div class="ranks">
     <div class="player-row player-header">
         <div class="player-rank">Rank</div>
         <div class="player-name">Name</div>
@@ -163,8 +188,10 @@
         <div class="player-name"><a href="#/history_user/{{event_id}}/{{player.user_id}}">{{player.name}}</a></div>
         <div class="player-score">{{player.score}}</div>
     </div>
+</div>
 </script>
 <script type="text/ng-template" id="partials/history-user.html">
+<div class="ranks">
     <div class="step-row step-header">
         <div class="step-step">Hour</div>
         <div class="step-rank">Rank</div>
@@ -177,8 +204,10 @@
         <div class="step-name">{{step.name}}</div>
         <div class="step-score">{{step.score}}</div>
     </div>
+</div>
 </script>
 <script type="text/ng-template" id="partials/cutoff-list.html">
+<div class="ranks">
     <div class="cutoff-row cutoff-header">
         <div class="cutoff-step">Hour</div>
         <div class="cutoff-tier">First</div>
@@ -195,6 +224,7 @@
         <div class="cutoff-tier">{{step.tier_3}}</div>
         <div class="cutoff-tier">{{step.tier_4}}</div>
     </div>
+</div>
 </script>
 
     </body>
