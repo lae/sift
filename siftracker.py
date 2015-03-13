@@ -46,6 +46,16 @@ class HistoryUser(object):
             raise falcon.HTTPNotFound()
         resp.body = json.dumps(history)
 
+class HistoryUserEvents(object):
+    def on_get(self, req, resp, user_id):
+        c = new_cursor()
+        c.execute("SELECT s.* FROM (SELECT * FROM generate_series(3, (SELECT max(event_id) FROM rankings))) u(ev), lateral (SELECT event_id FROM rankings WHERE event_id = ev AND user_id = %(user_id)s LIMIT 1) s", {'user_id': user_id})
+        events = c.fetchall()
+        if not events:
+            raise falcon.HTTPNotFound()
+        events = [e["event_id"] for e in events]
+        resp.body = json.dumps(events)
+
 class Cutoff(object):
     def on_get(self, req, resp, event_id):
         #cutoff_marks = (1,600,3000,6000,12000)
@@ -78,4 +88,5 @@ api = application = falcon.API(middleware = ReverseProxy())
 api.add_route('/ranking/{event_id}', Ranking())
 api.add_route('/cutoff/{event_id}', Cutoff())
 api.add_route('/history_user/{event_id}/{user_id}', HistoryUser())
+api.add_route('/history_user_events/{user_id}', HistoryUserEvents())
 api.add_route('/revision', Revision())

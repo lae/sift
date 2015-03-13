@@ -196,6 +196,10 @@
 </div>
 </script>
 <script type="text/ng-template" id="partials/history-user.html">
+<div class="navigation-header">
+    <span>events:</span>
+    <a ng-repeat="ev in played_events" href="#/history_user/{{ev}}/{{user_id}}">{{ev}}</a>
+</div>
 <div class="ranks">
     <div class="step-row step-header">
         <div class="step-step">Hour</div>
