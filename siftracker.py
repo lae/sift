@@ -62,10 +62,18 @@ class Cutoff(object):
             for s in cutoffs:
                 if s['step'] == step:
                     s[tier] = score
-
         resp.body = json.dumps(cutoffs)
+
+class Revision(object):
+    def __init__(self):
+        import subprocess
+        self.revision = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip().decode("utf-8")
+
+    def on_get(self, req, resp):
+        resp.body = json.dumps({"revision": self.revision})
 
 api = application = falcon.API(middleware = ReverseProxy())
 api.add_route('/ranking/{event_id}', Ranking())
 api.add_route('/cutoff/{event_id}', Cutoff())
 api.add_route('/history_user/{event_id}/{user_id}', HistoryUser())
+api.add_route('/revision', Revision())

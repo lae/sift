@@ -25,13 +25,12 @@
                 text-decoration: none;
                 font-size: 1.2em;
             }
-            .muffin-link { width: 10%; }
-            .muffin-link a {
+            .muffin-link { width: 10%; font-size: 1.2em; }
+            .muffin-link a, .blanket a {
                 color: #ff6f6f;
-                font-size: 1.2em;
                 text-decoration: none;
             }
-            .muffin-link a:hover {
+            .muffin-link a:hover, .blanket a:hover {
                 color: #ff9f0f;
             }
             #event {
@@ -55,6 +54,18 @@
                 width: 100%;
                 background: #0f0f0f;
                 color: #dfdfdf;
+            }
+            .blanket {
+                bottom: 0;
+                overflow: auto;
+                position: absolute;
+                height: 1em;
+                width: 100%;
+                background: #1f1f1f;
+                color: #dfdfdf;
+                z-index: 3;
+                display: table;
+                text-align: center;
             }
             .player-row, .step-row, .cutoff-row {
                 display: table;
@@ -91,6 +102,7 @@
                 -moz-column-count: 4;
                 -webkit-column-count: 4;
                 column-count: 4;
+                padding-bottom: 5em;
             }
         </style>
     </head>
@@ -123,6 +135,16 @@
 
 <div class="basket">
     <div class="ranks" ng-view></div>
+</div>
+
+<div class="units-container blanket">
+    <div class="units-row end">
+        <div class="unit-100" ng-controller="RevisionCtrl">
+            <div class="unit-push-50 unit-40">
+                siftracker rev#{{revision}} - <a href="https://twitter.com/sleepingkyoto">twitter</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>

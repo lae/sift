@@ -36,6 +36,12 @@ angular.module('siftracker')
                 eventId: $routeParams.eventId,
                 userId: $routeParams.userId});
             $scope.orderProp = 'step';
+        }])
+    .controller('RevisionCtrl', ['$scope', '$http',
+        function($scope, $http) {
+            $http.get('revision').success(function(data) {
+                $scope.revision = data.revision;
+            });
         }]);
 
 angular.module('siftracker')
