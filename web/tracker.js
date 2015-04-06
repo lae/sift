@@ -6,6 +6,11 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
                 return $resource( 'ranking/:eventId', {},
                     {query: {method:'GET', params:{},isArray: true}});
             }])
+    .factory('YonChanneru', ['$resource',
+            function($resource) {
+                return $resource( 'yonchanneru/:eventId', {},
+                    {query: {method:'GET', params:{},isArray: true}});
+            }])
     .factory('Cutoff', ['$resource',
             function($resource) {
                 return $resource( 'cutoff/:eventId', {},
@@ -20,7 +25,7 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
 angular.module('siftracker')
     .controller('RankingCtrl', ['$scope', '$routeParams', 'Ranking',
         function($scope, $routeParams, Ranking) {
-            $scope.event_id = $routeParams.eventId || 21;
+            $scope.event_id = $routeParams.eventId || 23;
             $scope.page = parseInt($routeParams.page) || 0;
             $scope.next_page = $scope.page + 1;
             $scope.prev_page = $scope.page - 1;
@@ -31,11 +36,19 @@ angular.module('siftracker')
             });
             $scope.orderProp = 'rank';
         }])
+    .controller('YonChanneruCtrl', ['$scope', '$routeParams', 'YonChanneru',
+        function($scope, $routeParams, YonChanneru) {
+            $scope.event_id = $routeParams.eventId || 23;
+            $scope.ranking = YonChanneru.query({
+                eventId: $scope.event_id
+            });
+            $scope.orderProp = 'rank';
+        }])
     .controller('CutoffCtrl', ['$scope', '$routeParams', 'Cutoff',
         function($scope, $routeParams, Cutoff) {
-            $scope.event_id = $routeParams.eventId || 21
+            $scope.event_id = $routeParams.eventId || 23
             $scope.cutoffs = Cutoff.query({eventId: $scope.event_id});
-            $scope.orderProp = 'step';
+            $scope.orderProp = '-step';
         }])
     .controller('HistoryUserCtrl', ['$scope', '$routeParams', 'HistoryUser', '$http',
         function($scope, $routeParams, HistoryUser, $http) {
@@ -65,6 +78,10 @@ angular.module('siftracker')
             when('/ranking/:eventId', {
                 templateUrl: 'partials/ranking-list.html',
                 controller: 'RankingCtrl'
+            }).
+            when('/yonchanneru/:eventId', {
+                templateUrl: 'partials/yonchanneru-list.html',
+                controller: 'YonChanneruCtrl'
             }).
             when('/ranking/:eventId/:page', {
                 templateUrl: 'partials/ranking-list.html',

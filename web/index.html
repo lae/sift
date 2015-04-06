@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="kube.min.css" />
         <link rel="stylesheet" href="fonts.css" />
         <link rel="stylesheet" href="tracker.css" />
+        <meta property="og:image" content="images/logo.png" />
         <style type="text/css">
             body { background: #bf4f4f; }
             .muffin {
@@ -61,7 +62,7 @@
                 overflow: auto;
                 position: absolute;
                 top: 60px;
-                bottom: 1em;
+                bottom: 1.4em;
                 width: 100%;
                 background: #0f0f0f;
                 color: #dfdfdf;
@@ -85,11 +86,11 @@
                 padding: 0;
                 background: #1f1f1f;
                 color: #dfdfdf;
-                line-height: 1.2em;
+                line-height: 1.5em;
                 z-index: 3;
                 display: table;
                 text-align: center;
-                font-size: 0.8em;
+                font-size: 1.0em;
             }
             .player-row, .step-row, .cutoff-row {
                 display: table;
@@ -122,6 +123,11 @@
             .player-score, .step-score {
                 text-align: center;
             }
+            .cutoff-ranks {
+                width: 650px;
+                margin: 28px auto;
+                padding-bottom: 5em;
+            }
             .ranks {
                 -moz-column-count: 3;
                 -webkit-column-count: 3;
@@ -148,8 +154,8 @@
             </div>
             <div class="event-form">
                 <form class="forms end" style="display: inline-block;">
-                    <select id="event"><option>19: Sixth Round Score Match (Nico)</option></select>
-                </form>&nbsp;&nbsp;&nbsp;(still in development)
+                    <select id="event"><option>21: Score Match Round 7 (Maki)</option></select>
+                </form>&nbsp;&nbsp;&nbsp;(μ alpha? μ's alpha dess (trust only the current cutoffs/ranking page))
             </div>
             <div class="muffin-link">
                 <a href="#/ranking">Current Ranking</a>
@@ -167,7 +173,7 @@
     <div class="units-row end">
         <div class="unit-100" ng-controller="RevisionCtrl">
             <div class="unit-push-50 unit-40">
-                siftracker.py rev#{{revision}} - <a href="https://twitter.com/sleepingkyoto">twitter</a>
+                siftracker.py rev#{{revision}} (child project (and home) of the <a href="https://ll.idolactiviti.es/">original SIF EN tracker</a>) - <a href="https://twitter.com/sleepingkyoto">twitter</a> - <a href="https://gratipay.com/lae/">like this? tip me!</a>
             </div>
         </div>
     </div>
@@ -183,6 +189,23 @@
     <a href="#/ranking/{{event_id}}/{{prev_page}}" ng-class="{invisible: prev_page < 0}">prev</a>
     <a href="#/ranking/{{event_id}}" ng-class="{invisible: page < 1}">first</a>
     <a href="#/ranking/{{event_id}}/{{next_page}}">next</a>
+</div>
+<div class="ranks">
+    <div class="player-row player-header">
+        <div class="player-rank">Rank</div>
+        <div class="player-name">Name</div>
+        <div class="player-score">Score</div>
+    </div>
+    <div class="player-row" ng-class-even="'player-row-even'" ng-repeat="player in ranking | orderBy:orderProp">
+        <div class="player-rank">{{player.rank}}</div>
+        <div class="player-name"><a href="#/history_user/{{event_id}}/{{player.user_id}}">{{player.name}}</a></div>
+        <div class="player-score">{{player.score}}</div>
+    </div>
+</div>
+</script>
+<script type="text/ng-template" id="partials/yonchanneru-list.html">
+<div class="navigation-header">
+    what a bunch of wonderful anons
 </div>
 <div class="ranks">
     <div class="player-row player-header">
@@ -225,7 +248,7 @@
     <span>tier 3: <strong>{{cutoffs[cutoffs.length-1].tier_3}}</strong></span>
     <span>tier 4: <strong>{{cutoffs[cutoffs.length-1].tier_4}}</strong></span>
 </div>
-<div class="ranks">
+<div class="cutoff-ranks">
     <div class="cutoff-row cutoff-header">
         <div class="cutoff-step">Hour</div>
         <div class="cutoff-tier">First</div>

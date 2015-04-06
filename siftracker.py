@@ -15,7 +15,7 @@ def new_cursor():
 
 region = make_region().configure(
     'dogpile.cache.pylibmc',
-    expiration_time = 900,
+    expiration_time = 300,
     arguments = {
         'url':["127.0.0.1:11211"],
         'binary': True,
@@ -58,6 +58,24 @@ class Ranking(object):
             raise falcon.HTTPNotFound()
         resp.body = json.dumps(rankings)
 
+class FourChanners(object):
+    def __init__(self):
+        self.members = (65,115,242,272,393,468,612,727,852,895,1007,1133,1228,1569,2223,2284,2658,2701,3231,3350,3383,3677,3892,3965,4020,4109,4255,4426,4523,4732,5250,5324,5378,5724,5911,5993,6047,6096,6464,6676,6763,7085,7249,7531,7578,7605,7894,8020,8071,8153,8427,8654,8772,8919,9133,9192,9254,9455,9540,9621,9755,10370,10706,11847,12638,12801,13190,13219,13615,16084,18927,19169,19189,19554,23385,24353,25431,27677,28502,30184,30409,31321,33187,33501,34256,35976,36193,43753,45865,47383,47507,48469,49397,53330,54407,54442,54726,56998,57171,59114,59156,62517,63456,64203,67585,71148,72776,73051,77122,85386,88081,90819,92967,94117,94582,99710,104518,107266,110126,118533,118654,127679,129038,131215,132159,135023,135142,135470,138327,138517,142738,143817,144169,147942,147955,152290,153411,156666,157967,158338,160339,162052,164670,169040,171951,177062,177768,178357,184574,185582,188457,189259,191472,197233,204027,209570,215952,224043,228746,229359,231763,235266,235686,241579,243766,245293,249413,256156,256655,259316,274227,274312,278283,278967,279011,283604,284027,290863,300793,310065,318164,318236,321161,323174,340046,353611,361654,363427,363729,375591,376526,377257,384046,404882,407495,418600,430112,437719,445818,446500,457151,464594,467497,469946,479490,480615,484897,485651,486662,491094,492435,499568,508660,508964,509791,511503,516729,518555,519251,519251,523888,525487,537409,543298,551263,592525,593969,594418,622510,641106,642235,648489,649749,653232,655076,658931,669983,683311,686229,693777,714813,719428,736040,738428,744739,758627,760940,762567,778511,782198,793476,794897,797155,808253,814764,819125,842274,850445,862487,870444,879882,888680,897325,904110,908289,918041,936224,941208,946825,955849,961224,966327,969077,975041,1000369,1040239,1085141,1087773,1133970,1133970,1147131,1166294,1232585,1277954,515636250,764673408)
+
+    @region.cache_on_arguments()
+    def get_rankings(self, event_id):
+        c = new_cursor()
+        c.execute("SELECT rank,name,user_id,score FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) AND user_id IN %(members)s ORDER BY rank", {'event_id': event_id, 'members': self.members})
+        rankings = c.fetchall()
+        return rankings
+
+    def on_get(self, req, resp, event_id):
+        rankings = self.get_rankings(event_id)
+        if not rankings:
+            raise falcon.HTTPNotFound()
+        resp.body = json.dumps(rankings)
+
+
 class HistoryUser(object):
     @region.cache_on_arguments()
     def get_history_user(self, event_id, user_id):
@@ -91,7 +109,7 @@ class Cutoff(object):
     @region.cache_on_arguments()
     def get_cutoffs(self, event_id, cutoff_marks):
         c = new_cursor()
-        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s", {'event_id': event_id, 'ranks': cutoff_marks})
+        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
         results = c.fetchall()
         return results
 
@@ -125,4 +143,5 @@ api.add_route('/ranking/{event_id}', Ranking())
 api.add_route('/cutoff/{event_id}', Cutoff())
 api.add_route('/history_user/{event_id}/{user_id}', HistoryUser())
 api.add_route('/history_user_events/{user_id}', HistoryUserEvents())
+api.add_route('/yonchanneru/{event_id}', FourChanners())
 api.add_route('/revision', Revision())
