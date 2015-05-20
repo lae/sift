@@ -25,7 +25,7 @@ angular.module('siftracker', ['ngRoute', 'ngResource'])
 angular.module('siftracker')
     .controller('RankingCtrl', ['$scope', '$routeParams', 'Ranking',
         function($scope, $routeParams, Ranking) {
-            $scope.event_id = $routeParams.eventId || 23;
+            $scope.event_id = $routeParams.eventId || 26;
             $scope.page = parseInt($routeParams.page) || 0;
             $scope.next_page = $scope.page + 1;
             $scope.prev_page = $scope.page - 1;
@@ -38,7 +38,7 @@ angular.module('siftracker')
         }])
     .controller('YonChanneruCtrl', ['$scope', '$routeParams', 'YonChanneru',
         function($scope, $routeParams, YonChanneru) {
-            $scope.event_id = $routeParams.eventId || 23;
+            $scope.event_id = $routeParams.eventId || 26;
             $scope.ranking = YonChanneru.query({
                 eventId: $scope.event_id
             });
@@ -46,7 +46,7 @@ angular.module('siftracker')
         }])
     .controller('CutoffCtrl', ['$scope', '$routeParams', 'Cutoff',
         function($scope, $routeParams, Cutoff) {
-            $scope.event_id = $routeParams.eventId || 23
+            $scope.event_id = $routeParams.eventId || 26
             $scope.cutoffs = Cutoff.query({eventId: $scope.event_id});
             $scope.orderProp = '-step';
         }])
@@ -103,3 +103,5 @@ angular.module('siftracker')
                 redirectTo: '/ranking'
             });
     }]);
+
+var siftracker = angular.module('siftracker');

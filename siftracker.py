@@ -116,7 +116,7 @@ class Cutoff(object):
     def on_get(self, req, resp, event_id):
         #cutoff_marks = (1,600,3000,6000,12000)
 #        c.execute("SELECT step,rank,score FROM rankings WHERE event_id = %(event_id)s AND rank IN %(ranks)s", {'event_id': event_id, 'ranks': cutoff_marks})
-        cutoff_marks = [1,600,3000,6000,12000]
+        cutoff_marks = [1,800,4000,8000,16000]
         results = self.get_cutoffs(event_id, cutoff_marks)
         if not results:
             raise falcon.HTTPNotFound()

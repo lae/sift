@@ -6,3 +6,6 @@ psycopg2==2.6
 pylibmc==1.4.1
 python-mimeparse==0.1.4
 six==1.9.0
+git+https://github.com/bottlepy/bottle.git
+meinheld==0.5.7
+

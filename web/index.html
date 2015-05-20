@@ -154,8 +154,8 @@
             </div>
             <div class="event-form">
                 <form class="forms end" style="display: inline-block;">
-                    <select id="event"><option>21: Score Match Round 7 (Maki)</option></select>
-                </form>&nbsp;&nbsp;&nbsp;(μ alpha? μ's alpha dess (trust only the current cutoffs/ranking page))
+                    <select id="event"><option>24: honk honk</option></select>
+                </form>&nbsp;&nbsp;&nbsp;(μ alpha? μ's alpha dess (only links to right are accurate)
             </div>
             <div class="muffin-link">
                 <a href="#/ranking">Current Ranking</a>
@@ -172,7 +172,8 @@
 <div class="units-container blanket">
     <div class="units-row end">
         <div class="unit-100" ng-controller="RevisionCtrl">
-            <div class="unit-push-50 unit-40">
+            <div class="unit-push 10 unit-30"><a href="https://ll.idolactiviti.es/en/tracker/pg_insert_dates.txt">update log</a></div>
+            <div class="unit-push-10 unit-40">
                 siftracker.py rev#{{revision}} (child project (and home) of the <a href="https://ll.idolactiviti.es/">original SIF EN tracker</a>) - <a href="https://twitter.com/sleepingkyoto">twitter</a> - <a href="https://gratipay.com/lae/">like this? tip me!</a>
             </div>
         </div>
@@ -223,7 +224,8 @@
 <script type="text/ng-template" id="partials/history-user.html">
 <div class="navigation-header history-user-event-links">
     <span>events:</span>
-    <a ng-repeat="ev in played_events" href="#/history_user/{{ev}}/{{user_id}}">{{ev}}</a>
+    <!-- following is a temporary hack, should be taken care of in python, as well as sort order (>3 1 2 4)-->
+    <a ng-repeat="ev in played_events" href="#/history_user/{{ev}}/{{user_id}}">{{ev-2}}</a>
 </div>
 <div class="ranks">
     <div class="step-row step-header">
@@ -242,7 +244,7 @@
 </script>
 <script type="text/ng-template" id="partials/cutoff-list.html">
 <div class="navigation-header">
-    <span>current cutoff</span>
+    <span>final cutoff</span>
     <span>tier 1: <strong>{{cutoffs[cutoffs.length-1].tier_1}}</strong></span>
     <span>tier 2: <strong>{{cutoffs[cutoffs.length-1].tier_2}}</strong></span>
     <span>tier 3: <strong>{{cutoffs[cutoffs.length-1].tier_3}}</strong></span>
