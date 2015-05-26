@@ -4,7 +4,7 @@ from .utils import get_db
 
 region = make_region().configure(
     'dogpile.cache.pylibmc',
-    expiration_time = 300,
+    expiration_time = 600,
     arguments = {
         'url':["127.0.0.1:11211"],
         'binary': True,
