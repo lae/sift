@@ -15,7 +15,8 @@ sift.config.update(dict(
     SECRET_KEY='GwqqNjR7m2jU8rTosPUFhu9HH1tBf51nhBg1t914nSXgj1uEMIu2veeS3AezL4zB',
     USERNAME='lae',
     PASSWORD='idk',
-    CURRENT_EVENT_ID=50
+    CURRENT_EVENT_ID=50,
+    CURRENT_EVENT_CUTOFF_MARKS=[1,10000,50000,120000,250000]
 ))
 
 @sift.teardown_appcontext
@@ -26,10 +27,6 @@ def close_db(error):
 
 @sift.route('/')
 def index():
-#    page = req.get_param_as_int('page') or 0
-#    if page < 0:
-#        raise falcon.HTTPBadRequest('Page Out of Range', 'page parameter' \
-#                ' must be greater than or equal to 0.')
     page = 0
     event_id = 50
     limit = 100
@@ -62,10 +59,18 @@ def history_user(event_id, user_id):
     split_data = [data[i*entries//4: (i+1)*entries//4] for i in range(4)]
     return render_template('history.user.html', data=split_data, event_id=event_id)
 
+@sift.route('/history/<int:event_id>/rank/<int:rank>')
+def history_rank(event_id, rank):
+    data = HistoryRank().get(event_id, rank)
+    if not data:
+        abort(404)
+    entries = len(data)
+    split_data = [data[i*entries//4: (i+1)*entries//4] for i in range(4)]
+    return render_template('history.rank.html', data=split_data, event_id=event_id, rank=rank)
+
 @sift.route('/cutoff/<int:event_id>')
 def list_cutoffs(event_id):
-    cutoff_marks = [1,10000,50000,120000,250000]
-    data = Cutoff().get(event_id, cutoff_marks)
+    data = list(reversed(Cutoff().get(event_id, sift.config['CURRENT_EVENT_CUTOFF_MARKS'])))
     if not data:
         abort(404)
     return render_template('list_cutoffs.html', data=data, event_id=event_id)

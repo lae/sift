@@ -32,20 +32,30 @@ class HistoryUser(object):
         history = c.fetchall()
         return history
 
+class HistoryRank(object):
+    @region.cache_on_arguments()
+    def get(self, event_id, rank):
+        c = get_db()
+        c.execute("SELECT s.* FROM (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
+        history = c.fetchall()
+        return history
+
 class Cutoff(object):
     @region.cache_on_arguments()
     def get(self, event_id, cutoff_marks):
         c = get_db()
-        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
+        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
         results = c.fetchall()
         cutoffs = [{"step": step} for step in set(sorted([item['step'] for item in results]))]
         for item in results:
             tier = "tier_{}".format(cutoff_marks.index(int(item['desired_rank'])))
             score = item['score']
             step = item['step']
+            name = item['name']
             for s in cutoffs:
                 if s['step'] == step:
                     s[tier] = score
+                    s[tier+'_name'] = name
         return cutoffs
 
 

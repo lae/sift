@@ -41,6 +41,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>History</td>
+{% set data_first = data[0] %}
+                        <td><a href="{{url_for('history_rank', event_id=event_id, rank=config.CURRENT_EVENT_CUTOFF_MARKS[0])}}" class="tracker-link">{{data_first.tier_0_name}}</a></td>
+                        <td><a href="{{url_for('history_rank', event_id=event_id, rank=config.CURRENT_EVENT_CUTOFF_MARKS[1])}}" class="tracker-link">{{data_first.tier_1_name}}</a></td>
+                        <td><a href="{{url_for('history_rank', event_id=event_id, rank=config.CURRENT_EVENT_CUTOFF_MARKS[2])}}" class="tracker-link">{{data_first.tier_2_name}}</a></td>
+                        <td><a href="{{url_for('history_rank', event_id=event_id, rank=config.CURRENT_EVENT_CUTOFF_MARKS[3])}}" class="tracker-link">{{data_first.tier_3_name}}</a></td>
+                        <td><a href="{{url_for('history_rank', event_id=event_id, rank=config.CURRENT_EVENT_CUTOFF_MARKS[4])}}" class="tracker-link">{{data_first.tier_4_name}}</a></td>
+                    </tr>
 {% for cutoff in data %}
                     <tr>
                         <td>{{cutoff.step}}</td>
