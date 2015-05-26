@@ -13,8 +13,15 @@ body {
 
 .tracker-wrapper {
     max-width: 1440px;
+    min-width: 360px;
     margin: auto;
     display: block;
+}
+
+.tracker-cutoffs-wrapper {
+    max-width: 960px;
+    min-width: 400px;
+    margin: auto;
 }
 
 .pure-g > div {
@@ -89,12 +96,6 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-}
-
-.tracker-table thead tr th:first-child, .tracker-table tbody tr td:first-child  {
-}
-
-.tracker-table thead tr th:last-child, .tracker-table tbody tr td:last-child {
 }
 
 .tracker-number {
