@@ -37,15 +37,15 @@
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th>Rank</th>
+                        <th class="tracker-column-rank">Rank</th>
                         <th>Name</th>
-                        <th>Score</th>
+                        <th class="tracker-column-score">Score</th>
                     </tr>
                 </thead>
                 <tbody>
 {% for player in part %}
                     <tr>
-                        <td class="tracker-number">{{player.rank}}</td>
+                        <td class="tracker-number"><a href="{{url_for('history_rank', event_id=event_id, rank=player.rank)}}" class="tracker-link">{{player.rank}}</a></td>
                         <td class="tracker-player-name"><a href="{{url_for('history_user', event_id=event_id, user_id=player.user_id)}}" class="tracker-link">{{player.name}}</a></td>
                         <td class="tracker-number">{{player.score}}</td>
                     </tr>
