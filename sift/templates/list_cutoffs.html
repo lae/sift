@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block header %}
+<div class="tracker-wrapper pure-g">
+    <div class="pure-u-1">
+        <div class="pure-menu pure-menu-horizontal">
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item pure-menu-heading">SIF Tracker</li>
+                <li class="pure-menu-item"><a href="{{url_for('index')}}" class="pure-menu-link">Rankings</a></li>
+                <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-selected">
+                    <a href="#" id="event-menu" class="pure-menu-link">Cutoffs</a>
+                    <ul class="pure-menu-children">
+                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link pure-menu-selected">Current</a></li>
+                        <li class="pure-menu-item pure-menu-has-children">
+                            <a href="#" class="pure-menu-link">Round 1</a>
+                            <ul class="pure-menu-children">
+                                <li class="pure-menu-item"><a href="#" class="pure-menu-link">???</a></li>
+                                <li class="pure-menu-item"><a href="#" class="pure-menu-link">??</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="pure-menu-item pure-menu-item-separator"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block body %}
+<div class="tracker-wrapper pure-g">
+    <div class="pure-u-1 tracker-container">
+        <div class="tracker-box">
+            <table class="tracker-table">
+                <thead>
+                    <tr>
+                        <th>Hour</th>
+                        <th>First</th>
+                        <th>Tier 1</th>
+                        <th>Tier 2</th>
+                        <th>Tier 3</th>
+                        <th>Tier 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+{% for cutoff in data %}
+                    <tr>
+                        <td>{{cutoff.step}}</td>
+                        <td>{{cutoff.tier_0}}</td>
+                        <td>{{cutoff.tier_1}}</td>
+                        <td>{{cutoff.tier_2}}</td>
+                        <td>{{cutoff.tier_3}}</td>
+                        <td>{{cutoff.tier_4}}</td>
+                    </tr>
+{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

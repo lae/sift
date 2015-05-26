@@ -1,0 +1,111 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    font-family: 'Noto Sans', 'Noto Sans Japanese', sans-serif;
+}
+
+body {
+    color: #333;
+    background: #f2f2f2;
+}
+
+.tracker-wrapper {
+    max-width: 1440px;
+    margin: auto;
+    display: block;
+}
+
+.pure-g > div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.pure-menu-horizontal .pure-menu-list {
+    display: inline-flex;
+    width: 100%;
+}
+
+.pure-menu-item-separator {
+    flex-grow: 1;
+}
+
+.tracker-container {
+    padding: 0.5em;
+}
+
+@media screen and (min-width: 48em) and (max-width:79.938em) {
+    .tracker-wrapper.split-into-columns {
+        -moz-column-count: 2;
+        -moz-column-gap: 0;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 0;
+        column-count: 2;
+        column-gap: 0;
+    }
+    .tracker-wrapper .tracker-container:nth-child(odd) .tracker-box {
+        border-bottom: none;
+    }
+    .tracker-wrapper .tracker-container:nth-child(odd) {
+        padding-bottom: 0;
+    }
+    .tracker-wrapper .tracker-container:nth-child(even) .tracker-box {
+        border-top: none;
+    }
+    .tracker-wrapper .tracker-container:nth-child(even) {
+        padding-top: 0;
+    }
+}
+@media screen and (max-width: 47.938em) {
+    .tracker-wrapper .tracker-container {
+        padding: 0 1.5em;
+    }
+    .tracker-wrapper .tracker-container .tracker-box {
+        border-top: none;
+        border-bottom: none;
+    }
+}
+
+.tracker-table {
+    width: 100%;
+}
+
+.tracker-table thead {
+    background: #333;
+    color: #fff;
+}
+
+.tracker-table thead tr th {
+    text-align: left;
+}
+
+.tracker-table thead tr th, .tracker-table tbody tr td {
+    padding: 0.2em 0.5em;
+}
+
+.tracker-player-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tracker-table thead tr th:first-child, .tracker-table tbody tr td:first-child  {
+}
+
+.tracker-table thead tr th:last-child, .tracker-table tbody tr td:last-child {
+}
+
+.tracker-number {
+    text-align: right;
+}
+
+.tracker-box {
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.tracker-link {
+    color: inherit;
+}
