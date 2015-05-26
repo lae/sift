@@ -5,11 +5,11 @@
         <div class="pure-menu pure-menu-horizontal">
             <ul class="pure-menu-list">
                 <li class="pure-menu-item pure-menu-heading">SIF Tracker</li>
-                <li class="pure-menu-item pure-menu-selected"><a href="{{url_for('index')}}" class="pure-menu-link">Rankings</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">Rankings</a></li>
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                    <a href="#" id="event-menu" class="pure-menu-link">Events</a>
+                    <a href="#" id="event-menu" class="pure-menu-link">Cutoffs</a>
                     <ul class="pure-menu-children">
-                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Current</a></li>
+                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">Current</a></li>
                         <li class="pure-menu-item pure-menu-has-children">
                             <a href="#" class="pure-menu-link">Round 1</a>
                             <ul class="pure-menu-children">

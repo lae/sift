@@ -5,7 +5,7 @@
         <div class="pure-menu pure-menu-horizontal">
             <ul class="pure-menu-list">
                 <li class="pure-menu-item pure-menu-heading">SIF Tracker</li>
-                <li class="pure-menu-item"><a href="{{url_for('index')}}" class="pure-menu-link">Rankings</a></li>
+                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">Rankings</a></li>
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-selected">
                     <a href="#" id="event-menu" class="pure-menu-link">Cutoffs</a>
                     <ul class="pure-menu-children">
