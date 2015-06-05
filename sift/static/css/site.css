@@ -80,6 +80,16 @@ body {
         border-top: none;
         border-bottom: none;
     }
+    .pure-menu-horizontal {
+        white-space: wrap;
+    }
+    .pure-menu-item {
+        display: block;
+    }
+    .pure-menu-horizontal .pure-menu-list {
+        display: block;
+        white-space: wrap;
+    }
 }
 
 .tracker-table {
