@@ -4,12 +4,12 @@
     <div class="pure-u-1">
         <div class="pure-menu pure-menu-horizontal">
             <ul class="pure-menu-list">
-                <li class="pure-menu-item pure-menu-heading">SIF Tracker</li>
-                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">Rankings</a></li>
+                <li class="pure-menu-item pure-menu-heading">スクフェス記録</li>
+                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">ランキング</a></li>
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                    <a href="#" id="event-menu" class="pure-menu-link">Cutoffs</a>
+                    <a href="#" id="event-menu" class="pure-menu-link">段位</a>
                     <ul class="pure-menu-children">
-                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">Current</a></li>
+                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">現在のイベント</a></li>
                         <li class="pure-menu-item pure-menu-has-children">
                             <a href="#" class="pure-menu-link">Round 1</a>
                             <ul class="pure-menu-children">
@@ -33,10 +33,10 @@
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th class="tracker-column-hour">Hour</th>
-                        <th class="tracker-column-rank">Rank</th>
-                        <th>Name</th>
-                        <th class="tracker-column-score">Score</th>
+                        <th class="tracker-column-hour">時</th>
+                        <th class="tracker-column-rank">順位</th>
+                        <th>名</th>
+                        <th class="tracker-column-score">スコア</th>
                     </tr>
                 </thead>
                 <tbody>
