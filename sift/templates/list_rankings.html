@@ -20,6 +20,11 @@
                     </ul>
                 </li>
                 <li class="pure-menu-item pure-menu-item-separator"></li>
+                <li class="pure-menu-item">
+                    <form class="pure-form" action="{{url_for('search')}}" method="GET">
+                        <input type="search" name="q" placeholder="ユーザーを検索する" class="tracker-user-search">
+                    </form>
+                </li>
 {% if page > 0 %}
                 <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page-1)}}" class="pure-menu-link navigation-arrow">◀</a></li>
 {% endif %}

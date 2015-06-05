@@ -127,3 +127,11 @@ body {
 .tracker-link {
     color: inherit;
 }
+
+.pure-form input[type="search"] {
+    border-radius: 2px;
+    padding: 0.4em 0.5em 0.3em;
+}
+.tracker-user-search {
+    margin-right: 0.5em;
+}

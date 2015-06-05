@@ -75,6 +75,26 @@ def list_cutoffs(event_id):
         abort(404)
     return render_template('list_cutoffs.html', data=data, event_id=event_id)
 
+@sift.route('/search')
+def search():
+    if 'q' in request.args:
+        query = request.args['q']
+        if len(query) < 3 or '%' in query:
+            abort(418)
+    else:
+        abort(404)
+
+    if 'event' in request.args:
+        event_id = int(request.args['event'])
+    else:
+        event_id = sift.config['CURRENT_EVENT_ID']
+
+    data = SearchUser().get(event_id, query)
+    if not data:
+        data = []
+    return render_template('search_results.html', data=data, query=query)
+
+
 class Revision(object):
     def revision(self):
         import subprocess

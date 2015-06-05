@@ -24,6 +24,14 @@ class Ranking(object):
         rankings = c.fetchall()
         return rankings
 
+class SearchUser(object):
+    @region.cache_on_arguments()
+    def get(self, event_id, search):
+        c = get_db()
+        c.execute("SELECT event_id, rank, user_id, name FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) AND lower(name) LIKE %(search)s ORDER BY rank", {'event_id': event_id, 'search': '%'+search.lower()+'%'})
+        results = c.fetchall()
+        return results
+
 class HistoryUser(object):
     @region.cache_on_arguments()
     def get(self, event_id, user_id):
