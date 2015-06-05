@@ -15,7 +15,7 @@ sift.config.update(dict(
     SECRET_KEY='GwqqNjR7m2jU8rTosPUFhu9HH1tBf51nhBg1t914nSXgj1uEMIu2veeS3AezL4zB',
     USERNAME='lae',
     PASSWORD='idk',
-    CURRENT_EVENT_ID=50,
+    CURRENT_EVENT_ID=51,
     CURRENT_EVENT_CUTOFF_MARKS=[1,10000,50000,120000,250000]
 ))
 
@@ -28,7 +28,7 @@ def close_db(error):
 @sift.route('/')
 def index():
     page = 0
-    event_id = 50
+    event_id = 51
     limit = 100
     data = Ranking().get(event_id, limit, page)
     if not data:
