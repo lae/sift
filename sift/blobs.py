@@ -44,7 +44,7 @@ class HistoryRank(object):
     @region.cache_on_arguments()
     def get(self, event_id, rank):
         c = get_db()
-        c.execute("SELECT s.* FROM (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
+        c.execute("SELECT s.* FROM (SELECT step FROM rankings_mv_playercount WHERE event_id = %(event_id)s AND players >= %(rank)s ORDER BY step) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
         history = c.fetchall()
         return history
 
