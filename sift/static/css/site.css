@@ -40,11 +40,13 @@ body {
 
 .pure-menu-horizontal .pure-menu-list {
     display: inline-flex;
+    display: -webkit-inline-flex;
     width: 100%;
 }
 
 .pure-menu-item-separator {
     flex-grow: 1;
+    -webkit-flex-grow: 1;
 }
 
 .tracker-container {
