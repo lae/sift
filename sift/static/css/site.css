@@ -120,8 +120,12 @@ body {
     text-align: right;
 }
 
-.tracker-column-rank, .tracker-column-hour {
+.tracker-column-rank {
     width: 3em;
+}
+
+.tracker-column-hour {
+    width: 4em;
 }
 
 .tracker-column-score {
