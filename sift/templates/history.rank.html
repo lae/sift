@@ -7,7 +7,7 @@
                 <li class="pure-menu-item pure-menu-heading">スクフェス記録</li>
                 <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">ランキング</a></li>
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                    <a href="#" id="event-menu" class="pure-menu-link">段位</a>
+                    <a href="#" id="event-menu" class="pure-menu-link">ボーダー推移</a>
                     <ul class="pure-menu-children">
                         <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">現在のイベント</a></li>
                         <li class="pure-menu-item pure-menu-has-children">
@@ -29,12 +29,12 @@
 {% block body %}
 <div class="tracker-wrapper split-into-columns pure-g">
 {% for part in data %}
-    <div class="pure-u-1 pure-u-md-1 pure-u-xl-1-4 tracker-container">
+    <div class="pure-u-1 pure-u-md-1 pure-u-xl-1-{{ column_count }} tracker-container">
         <div class="tracker-box">
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th class="tracker-column-hour">時</th>
+                        <th class="tracker-column-hour">経過時間</th>
                         <th>名</th>
                         <th class="tracker-column-score">スコア</th>
                     </tr>

@@ -7,7 +7,7 @@
                 <li class="pure-menu-item pure-menu-heading">スクフェス記録</li>
                 <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">ランキング</a></li>
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-selected">
-                    <a href="#" id="event-menu" class="pure-menu-link">段位</a>
+                    <a href="#" id="event-menu" class="pure-menu-link">ボーダー推移</a>
                     <ul class="pure-menu-children">
                         <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link pure-menu-selected">現在のイベント</a></li>
                         <li class="pure-menu-item pure-menu-has-children">
@@ -29,7 +29,7 @@
 <div class="tracker-cutoffs-wrapper pure-g">
     <div class="pure-u-1 tracker-container">
         <div class="tracker-box" style="text-align: center;">
-            先24時間限定
+            過去24時間以内
         </div>
     </div>
     <div class="pure-u-1 tracker-container">
@@ -37,8 +37,8 @@
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th class="tracker-column-hour">時</th>
-                        <th>一番</th>
+                        <th class="tracker-column-hour">経過時間</th>
+                        <th>1位</th>
                         <th>{{config.CURRENT_EVENT_CUTOFF_MARKS[1]}}位</th>
                         <th>{{config.CURRENT_EVENT_CUTOFF_MARKS[2]}}位</th>
                         <th>{{config.CURRENT_EVENT_CUTOFF_MARKS[3]}}位</th>
