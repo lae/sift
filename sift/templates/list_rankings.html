@@ -2,9 +2,9 @@
 {% set event_sel_endpoint = "list_rankings" %}
 {% block header_extra %}
 {% if page > 0 %}
-                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page-1)}}" class="pure-menu-link navigation-arrow">◀ {{ 100*page-1 }}位</a></li>
+                <li class="pure-menu-item"><a href="{{ url_for('list_rankings', event_id=event.event_id, page=page-1) }}" class="pure-menu-link navigation-arrow">◀ {{ 100*page-1 }}位</a></li>
 {% endif %}
-                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page+1)}}" class="pure-menu-link navigation-arrow">{{ 100*(page+1)+1 }}位 ▶</a></li>
+                <li class="pure-menu-item"><a href="{{ url_for('list_rankings', event_id=event.event_id, page=page+1) }}" class="pure-menu-link navigation-arrow">{{ 100*(page+1)+1 }}位 ▶</a></li>
 {% endblock header_extra %}
 {% block body %}
 <div class="tracker-wrapper split-into-columns pure-g">
@@ -22,9 +22,9 @@
                 <tbody>
 {% for player in part %}
                     <tr>
-                        <td class="tracker-number"><a href="{{url_for('history_rank', event_id=event_id, rank=player.rank)}}" class="tracker-link">{{player.rank}}</a></td>
-                        <td class="tracker-player-name"><a href="{{url_for('history_user', event_id=event_id, user_id=player.user_id)}}" class="tracker-link">{{player.name}}</a></td>
-                        <td class="tracker-number">{{player.score}}</td>
+                        <td class="tracker-number"><a href="{{ url_for('history_rank', event_id=event.event_id, rank=player.rank) }}" class="tracker-link">{{ player.rank }}</a></td>
+                        <td class="tracker-player-name"><a href="{{ url_for('history_user', event_id=event.event_id, user_id=player.user_id) }}" class="tracker-link">{{ player.name }}</a></td>
+                        <td class="tracker-number">{{ player.score }}</td>
                     </tr>
 {% endfor %}
                 </tbody>
