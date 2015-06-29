@@ -76,6 +76,9 @@ body {
     .tracker-wrapper .tracker-container {
         padding: 0 1.5em;
     }
+    .tracker-footer .tracker-container .tracker-box {
+        padding-top: 1.5em;
+    }
     .tracker-wrapper .tracker-container .tracker-box {
         border-top: none;
         border-bottom: none;
