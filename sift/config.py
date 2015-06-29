@@ -2,7 +2,6 @@ import os
 
 class Config(object):
     CURRENT_EVENT_ID = 1
-    CURRENT_EVENT_CUTOFF_MARKS = [1, 100, 200, 500, 1000]
     LADDER_LIMIT = 100
     DEBUG = False
     DATABASE_URI = "sqlite://:memory:"

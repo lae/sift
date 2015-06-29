@@ -107,10 +107,15 @@ def list_cutoffs(event_id):
     if not event_info:
         abort(404)
 
-    data = list(reversed(Cutoff().get(event_id, sift.config['CURRENT_EVENT_CUTOFF_MARKS'])))
+    borders = event_info[0]['borders']
+    tiers = list(range(0, len(borders)))
+
+    data = Cutoff().get(event_id, borders)
+    data = list(reversed(data))
     if not data:
         abort(404)
-    return render_template('list_cutoffs.html', data=data, event_id=event_id)
+
+    return render_template('list_cutoffs.html', tiers=tiers, data=data, event_id=event_id, borders=borders)
 
 @sift.route('/search')
 def search():
