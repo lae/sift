@@ -109,7 +109,7 @@ class EventMeta(object):
     @region.cache_on_arguments(namespace=region.key)
     def get_all(self):
         c = get_db()
-        c.execute("SELECT * from event_meta")
+        c.execute("SELECT * from event_meta ORDER BY id")
         results = c.fetchall()
         return results
 

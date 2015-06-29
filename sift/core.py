@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import collections
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 from .boot import sift
@@ -10,7 +11,7 @@ from .blobs import *
 @sift.context_processor
 def event_menu():
     events = EventMeta().get_all()
-    event_menu = {}
+    event_menu = collections.OrderedDict()
     for event in events:
         group = "Round %s" % event['round']
         event_item = {
