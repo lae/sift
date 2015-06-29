@@ -5,3 +5,4 @@ psycopg2==2.6
 pylibmc==1.4.1
 git+http://github.com/mitsuhiko/flask.git
 git+https://github.com/mitsuhiko/jinja2.git#egg=jinja2
+honcho
