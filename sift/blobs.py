@@ -44,7 +44,7 @@ class SearchUser(object):
     @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, search):
         c = get_db()
-        c.execute("SELECT event_id, rank, user_id, name FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) AND lower(name) LIKE %(search)s ORDER BY rank", {'event_id': event_id, 'search': '%'+search.lower()+'%'})
+        c.execute("SELECT event_id, rank, user_id, name FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) AND lower(name) LIKE %(search)s ORDER BY rank LIMIT 500", {'event_id': event_id, 'search': '%'+search.lower()+'%'})
         results = c.fetchall()
         return results
 
