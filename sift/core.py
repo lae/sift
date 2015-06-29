@@ -3,14 +3,8 @@ import os
 import json
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
-from .reverse_proxy import ReverseProxied
+from .boot import sift
 from .blobs import *
-from .config import configure_app
-
-sift = Flask(__name__, instance_relative_config=True)
-sift.wsgi_app = ReverseProxied(sift.wsgi_app)
-
-configure_app(sift)
 
 @sift.teardown_appcontext
 def close_db(error):

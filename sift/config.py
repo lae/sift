@@ -6,6 +6,7 @@ class Config(object):
     LADDER_LIMIT = 100
     DEBUG = False
     DATABASE_URI = "sqlite://:memory:"
+    MEMCACHE_ENABLED = False
 
 class DevelopmentConfig(Config):
     DEBUG = True

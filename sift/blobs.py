@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
+from .boot import sift
 from dogpile.cache import make_region
 from .utils import get_db
 
-region = make_region().configure(
-    'dogpile.cache.pylibmc',
-    expiration_time = 600,
-    arguments = {
-        'url':["127.0.0.1:11211"],
-        'binary': True,
-        'behaviors':{"tcp_nodelay": True,"ketama":True}
-    }
-)
+
+if sift.config['MEMCACHE_ENABLED']:
+    region = make_region().configure(
+        'dogpile.cache.pylibmc',
+        expiration_time = 600,
+        arguments = {
+            'url':["127.0.0.1:11211"],
+            'binary': True,
+            'behaviors':{"tcp_nodelay": True,"ketama":True}
+        }
+    )
+else:
+    region = make_region().configure(
+        'dogpile.cache.null'
+    )
 
 class Ranking(object):
     def __init__(self):

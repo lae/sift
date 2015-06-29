@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from .boot import sift
 import psycopg2
 import psycopg2.extras
 from flask import g
-import sift
 
 def connect_db():
     """Connects to SIF DB"""
