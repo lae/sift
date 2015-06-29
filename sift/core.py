@@ -112,7 +112,7 @@ def list_cutoffs(event_id):
     if not event_info:
         abort(404)
 
-    borders = event_info[0]['borders'][0:5]
+    borders = [1] + event_info[0]['borders'][0:5]
     tiers = list(range(0, len(borders)))
 
     data = Cutoff().get(event_id, borders)
