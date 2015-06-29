@@ -91,7 +91,7 @@ def search():
     data = SearchUser().get(event_id, query)
     if not data:
         data = []
-    return render_template('search_results.html', data=data, query=query)
+    return render_template('search_results.html', data=data, query=query, event_id=event_id)
 
 
 class Revision(object):
