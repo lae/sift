@@ -3,7 +3,7 @@
 {% set event_sel_extra_args = {"user_id": user_id} %}
 {% block header_extra %}
 {% set user_last = data[-1][-1] %}
-<li class="pure-menu-item"><span class="pure-menu-info">{{user_last.name}}</span></li>
+                <li class="pure-menu-item"><span class="pure-menu-info">{{ user_last.name }}</span></li>
 {% endblock %}
 {% block body %}
 <div class="tracker-wrapper split-into-columns pure-g">
@@ -22,10 +22,10 @@
                 <tbody>
 {% for player in part %}
                     <tr>
-                        <td class="tracker-number">{{player.step}}</td>
-                        <td class="tracker-number">{{player.rank}}</td>
-                        <td class="tracker-player-name">{{player.name}}</td>
-                        <td class="tracker-number">{{player.score}}</td>
+                        <td class="tracker-number">{{ player.step }}</td>
+                        <td class="tracker-number">{{ player.rank }}</td>
+                        <td class="tracker-player-name">{{ player.name }}</td>
+                        <td class="tracker-number">{{ player.score }}</td>
                     </tr>
 {% endfor %}
                 </tbody>

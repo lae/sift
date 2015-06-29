@@ -43,7 +43,12 @@ def index():
         abort(404)
 
     split_data = [data[i*limit//4: (i+1)*limit//4] for i in range(4)]
-    return render_template('list_rankings.html', data=split_data, page=page, event_id=event_id)
+    return render_template(
+        'list_rankings.html',
+        data = split_data,
+        page = page,
+        event = event_info[0]
+    )
 
 @sift.route('/ranking/<int:event_id>')
 def list_rankings(event_id):
@@ -63,7 +68,12 @@ def list_rankings(event_id):
         abort(404)
 
     split_data = [data[i*limit//4: (i+1)*limit//4] for i in range(4)]
-    return render_template('list_rankings.html', data=split_data, page=page, event_id=event_id)
+    return render_template(
+        'list_rankings.html',
+        data = split_data,
+        page = page,
+        event = event_info[0]
+    )
 
 @sift.route('/history/<int:event_id>/user/<int:user_id>')
 def history_user(event_id, user_id):
@@ -84,7 +94,13 @@ def history_user(event_id, user_id):
         column_count = 3
 
     split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
-    return render_template('history.user.html', data=split_data, event_id=event_id, user_id=user_id, column_count=column_count)
+    return render_template(
+        'history.user.html',
+        data = split_data,
+        user_id = user_id,
+        column_count = column_count,
+        event = event_info[0]
+    )
 
 @sift.route('/history/<int:event_id>/rank/<int:rank>')
 def history_rank(event_id, rank):
@@ -104,7 +120,13 @@ def history_rank(event_id, rank):
     else:
         column_count = 4
     split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
-    return render_template('history.rank.html', data=split_data, event_id=event_id, rank=rank, column_count=column_count)
+    return render_template(
+        'history.rank.html',
+        data = split_data,
+        rank = rank,
+        column_count = column_count,
+        event = event_info[0]
+    )
 
 @sift.route('/cutoff/<int:event_id>')
 def list_cutoffs(event_id):
@@ -120,7 +142,13 @@ def list_cutoffs(event_id):
     if not data:
         abort(404)
 
-    return render_template('list_cutoffs.html', tiers=tiers, data=data, event_id=event_id, borders=borders)
+    return render_template(
+        'list_cutoffs.html',
+        tiers = tiers,
+        data = data,
+        borders = borders,
+        event = event_info[0]
+    )
 
 @sift.route('/search')
 def search():
@@ -143,7 +171,12 @@ def search():
     data = SearchUser().get(event_id, query)
     if not data:
         data = []
-    return render_template('search_results.html', data=data, query=query, event_id=event_id)
+    return render_template(
+        'search_results.html',
+        data = data,
+        query = query,
+        event = event_info[0]
+    )
 
 
 if __name__ == '__main__':
