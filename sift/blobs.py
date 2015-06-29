@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
+from .boot import sift
 from dogpile.cache import make_region
 from .utils import get_db
 
-region = make_region().configure(
-    'dogpile.cache.pylibmc',
-    expiration_time = 600,
-    arguments = {
-        'url':["127.0.0.1:11211"],
-        'binary': True,
-        'behaviors':{"tcp_nodelay": True,"ketama":True}
-    }
-)
+
+if sift.config['MEMCACHE_ENABLED']:
+    region = make_region().configure(
+        'dogpile.cache.pylibmc',
+        expiration_time = 600,
+        arguments = {
+            'url':["127.0.0.1:11211"],
+            'binary': True,
+            'behaviors':{"tcp_nodelay": True,"ketama":True}
+        }
+    )
+else:
+    region = make_region().configure(
+        'dogpile.cache.null'
+    )
 
 class Ranking(object):
     def __init__(self):
@@ -44,7 +51,7 @@ class HistoryRank(object):
     @region.cache_on_arguments()
     def get(self, event_id, rank):
         c = get_db()
-        c.execute("SELECT s.* FROM (SELECT * FROM generate_series(0, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
+        c.execute("SELECT s.* FROM (SELECT step FROM rankings_mv_playercount WHERE event_id = %(event_id)s AND players >= %(rank)s ORDER BY step) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
         history = c.fetchall()
         return history
 
@@ -52,7 +59,7 @@ class Cutoff(object):
     @region.cache_on_arguments()
     def get(self, event_id, cutoff_marks):
         c = get_db()
-        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT * FROM generate_series((SELECT max(step) FROM rankings WHERE event_id = %(event_id)s)-24, (SELECT max(step) FROM rankings WHERE event_id = %(event_id)s))) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
+        c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT step, players FROM rankings_mv_playercount WHERE event_id = %(event_id)s ORDER BY step) v(desired_step, players_in_current_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step AND desired_rank <= players_in_current_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
         results = c.fetchall()
         cutoffs = [{"step": step} for step in set(sorted([item['step'] for item in results]))]
         for item in results:

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>スクフェス記録</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{{request.script_root}}/css/vendor/pure-min.css" type="text/css" />
+        <link rel="stylesheet" href="{{request.script_root}}/css/site.css" type="text/css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700" type="text/css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosansjapanese.css" type="text/css">
+    </head>
+    <body>
+<div class="bg"></div>
+<!-- 壁紙クレジット: http://www.pixiv.net/member_illust.php?mode=medium&illust_id=50260087 -->
+
+<div class="tracker-wrapper pure-g">
+    <div class="pure-u-1 tracker-container">
+        <div class="pure-menu pure-menu-horizontal tracker-box">
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a href="{{url_for('index')}}" class="pure-menu-heading">スクフェス記録</a></li>
+                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id)}}" class="pure-menu-link">ランキング</a></li>
+                <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=event_id)}}" class="pure-menu-link">ボーダー推移</a></li>
+                <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                    <a href="#" id="event-menu" class="pure-menu-link">イベント選択</a>
+                    <ul class="pure-menu-children">
+                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">現在のイベント</a></li>
+                    </ul>
+                </li>
+                <li class="pure-menu-item pure-menu-item-separator"></li>
+                    {% block header_extra %}{% endblock %}
+                <li class="pure-menu-item">
+                    <form class="pure-form" action="{{url_for('search')}}" method="GET">
+                        <input type="search" name="q" placeholder="ユーザーを検索する" class="tracker-user-search">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="pure-g tracker-wrapper">
+    <div class="pure-u-1 tracker-container">
+        <div style="text-align: center;" class="tracker-box">ベータです　ー　This is a beta.</div>
+    </div>
+</div>
+{% block body %}{% endblock %}
+{% include "piwik.html" %}
+    </body>
+</html>

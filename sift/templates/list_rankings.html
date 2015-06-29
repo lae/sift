@@ -1,32 +1,10 @@
-{% extends "layout.html" %}
-{% block header %}
-<div class="tracker-wrapper pure-g">
-    <div class="pure-u-1">
-        <div class="pure-menu pure-menu-horizontal">
-            <ul class="pure-menu-list">
-                <li class="pure-menu-item pure-menu-heading">スクフェス記録</li>
-                <li class="pure-menu-item pure-menu-selected"><a href="{{url_for('list_rankings', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">ランキング</a></li>
-                <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                    <a href="#" id="event-menu" class="pure-menu-link">段位</a>
-                    <ul class="pure-menu-children">
-                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">現在のイベント</a></li>
-                    </ul>
-                </li>
-                <li class="pure-menu-item pure-menu-item-separator"></li>
-                <li class="pure-menu-item">
-                    <form class="pure-form" action="{{url_for('search')}}" method="GET">
-                        <input type="search" name="q" placeholder="ユーザーを検索する" class="tracker-user-search">
-                    </form>
-                </li>
+{% extends "base.html" %}
+{% block header_extra %}
 {% if page > 0 %}
-                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page-1)}}" class="pure-menu-link navigation-arrow">◀</a></li>
+                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page-1)}}" class="pure-menu-link navigation-arrow">◀ {{ 100*page-1 }}位</a></li>
 {% endif %}
-                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page+1)}}" class="pure-menu-link navigation-arrow">▶</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endblock %}
+                <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page+1)}}" class="pure-menu-link navigation-arrow">{{ 100*(page+1)+1 }}位 ▶</a></li>
+{% endblock header_extra %}
 {% block body %}
 <div class="tracker-wrapper split-into-columns pure-g">
 {% for part in data %}

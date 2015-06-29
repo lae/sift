@@ -3,21 +3,8 @@ import os
 import json
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
-from .reverse_proxy import ReverseProxied
+from .boot import sift
 from .blobs import *
-
-sift = Flask(__name__)
-sift.wsgi_app = ReverseProxied(sift.wsgi_app)
-sift.config.from_object(__name__)
-
-# Load default config and override config from an environment variable
-sift.config.update(dict(
-    SECRET_KEY='GwqqNjR7m2jU8rTosPUFhu9HH1tBf51nhBg1t914nSXgj1uEMIu2veeS3AezL4zB',
-    USERNAME='lae',
-    PASSWORD='idk',
-    CURRENT_EVENT_ID=50,
-    CURRENT_EVENT_CUTOFF_MARKS=[1,10000,50000,120000,250000]
-))
 
 @sift.teardown_appcontext
 def close_db(error):
@@ -28,8 +15,8 @@ def close_db(error):
 @sift.route('/')
 def index():
     page = 0
-    event_id = 50
-    limit = 100
+    event_id = sift.config['CURRENT_EVENT_ID']
+    limit = sift.config['LADDER_LIMIT']
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
@@ -43,7 +30,7 @@ def list_rankings(event_id):
     else:
         page = 0
 
-    limit = 100
+    limit = sift.config['LADDER_LIMIT']
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
@@ -56,8 +43,14 @@ def history_user(event_id, user_id):
     if not data:
         abort(404)
     entries = len(data)
-    split_data = [data[i*entries//4: (i+1)*entries//4] for i in range(4)]
-    return render_template('history.user.html', data=split_data, event_id=event_id)
+    if entries < 20:
+        column_count = 1
+    elif entries <= 40:
+        column_count = 2
+    else:
+        column_count = 3
+    split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
+    return render_template('history.user.html', data=split_data, event_id=event_id, column_count=column_count)
 
 @sift.route('/history/<int:event_id>/rank/<int:rank>')
 def history_rank(event_id, rank):
@@ -65,8 +58,14 @@ def history_rank(event_id, rank):
     if not data:
         abort(404)
     entries = len(data)
-    split_data = [data[i*entries//4: (i+1)*entries//4] for i in range(4)]
-    return render_template('history.rank.html', data=split_data, event_id=event_id, rank=rank)
+    if entries < 20:
+        column_count = 1
+    elif entries <= 40:
+        column_count = 2
+    else:
+        column_count = 4
+    split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
+    return render_template('history.rank.html', data=split_data, event_id=event_id, rank=rank, column_count=column_count)
 
 @sift.route('/cutoff/<int:event_id>')
 def list_cutoffs(event_id):
@@ -79,7 +78,7 @@ def list_cutoffs(event_id):
 def search():
     if 'q' in request.args:
         query = request.args['q']
-        if len(query) < 3 or '%' in query:
+        if len(query) < 2 or '%' in query:
             abort(418)
     else:
         abort(404)

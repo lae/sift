@@ -120,8 +120,12 @@ body {
     text-align: right;
 }
 
-.tracker-column-rank, .tracker-column-hour {
+.tracker-column-rank {
     width: 3em;
+}
+
+.tracker-column-hour {
+    width: 4em;
 }
 
 .tracker-column-score {
@@ -137,13 +141,28 @@ body {
     color: inherit;
 }
 
-.pure-form input[type="search"] {
-    border-radius: 2px;
-    padding: 0.4em 0.5em 0.3em;
+.pure-menu-link {
+    border: 1px solid rgba(0,0,0,0);
 }
 
-.tracker-user-search {
-    margin-right: 0.5em;
+.pure-form input[type="search"].tracker-user-search {
+    border-radius: 0;
+}
+
+.pure-menu-link.navigation-arrow {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.pure-menu-children {
+    border: 1px solid #ccc;
+}
+
+.pure-menu-info {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.5em 1em;
+    color: #777;
 }
 
 /* @import url(https://fonts.googleapis.com/earlyaccess/notosansjapanese.css); */
