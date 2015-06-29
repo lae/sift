@@ -42,7 +42,7 @@
                     </ul>
                 </li>
                 <li class="pure-menu-item pure-menu-item-separator"></li>
-                <li class="pure-menu-item"><span class="pure-menu-info">{{ event.name }}</span></li>
+                <li class="pure-menu-item"><a href="{{ event.info_uri }}" class="pure-menu-link">{{ event.name }}</a></li>
                     {% block header_extra %}{% endblock %}
                 <li class="pure-menu-item">
                     <form class="pure-form" action="{{url_for('search')}}" method="GET">
