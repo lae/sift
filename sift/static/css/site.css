@@ -141,13 +141,21 @@ body {
     color: inherit;
 }
 
-.pure-form input[type="search"] {
-    border-radius: 2px;
-    padding: 0.4em 0.5em 0.3em;
+.pure-menu-link {
+    border: 1px solid rgba(0,0,0,0);
 }
 
-.tracker-user-search {
-    margin-right: 0.5em;
+.pure-form input[type="search"].tracker-user-search {
+    border-radius: 0;
+}
+
+.pure-menu-link.navigation-arrow {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.pure-menu-children {
+    border: 1px solid #ccc;
 }
 
 /* @import url(https://fonts.googleapis.com/earlyaccess/notosansjapanese.css); */
