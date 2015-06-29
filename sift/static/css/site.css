@@ -165,4 +165,11 @@ body {
     color: #777;
 }
 
+.pure-menu-children-push-right {
+/* TODO: actually push elements right properly */
+    position: relative;
+    margin-left: 7em;
+    margin-top: -2.3em;
+}
+
 /* @import url(https://fonts.googleapis.com/earlyaccess/notosansjapanese.css); */

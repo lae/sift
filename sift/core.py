@@ -7,6 +7,22 @@ from .boot import sift
 from .blobs import *
 
 
+@sift.context_processor
+def event_menu():
+    events = EventMeta().get_all()
+    event_menu = {}
+    for event in events:
+        group = "Round %s" % event['round']
+        event_item = {
+            'id': event['event_id'],
+            'name': event['name']
+        }
+        if group not in event_menu:
+            event_menu[group] = [event_item]
+        else:
+            event_menu[group].append(event_item)
+    return dict(event_menu=event_menu)
+
 @sift.route('/')
 def index():
     page = 0
@@ -61,8 +77,9 @@ def history_user(event_id, user_id):
         column_count = 2
     else:
         column_count = 3
+
     split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
-    return render_template('history.user.html', data=split_data, event_id=event_id, column_count=column_count)
+    return render_template('history.user.html', data=split_data, event_id=event_id, user_id=user_id, column_count=column_count)
 
 @sift.route('/history/<int:event_id>/rank/<int:rank>')
 def history_rank(event_id, rank):

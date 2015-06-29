@@ -1,3 +1,4 @@
+{% set event_sel_endpoint = "list_rankings" if not event_sel_endpoint else event_sel_endpoint %}
 <!DOCTYPE html>
 <html lang="ja">
     <head>
@@ -23,7 +24,21 @@
                 <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                     <a href="#" id="event-menu" class="pure-menu-link">イベント選択</a>
                     <ul class="pure-menu-children">
-                        <li class="pure-menu-item"><a href="{{url_for('list_cutoffs', event_id=config.CURRENT_EVENT_ID)}}" class="pure-menu-link">現在のイベント</a></li>
+{% set url_args = {"event_id": config.CURRENT_EVENT_ID} %}
+{% set _dummy = url_args.update(event_sel_extra_args) %}
+                        <li class="pure-menu-item"><a href="{{url_for(event_sel_endpoint, **url_args)}}" class="pure-menu-link">現在のイベント</a></li>
+{% for round_name, round in event_menu.items() %}
+                        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                            <a href="#" class="pure-menu-link">{{ round_name }}</a>
+                            <ul class="pure-menu-children pure-menu-children-push-right">
+{% for event in round %}
+{% set url_args = {"event_id": event['id']} %}
+{% set _dummy = url_args.update(event_sel_extra_args) %}
+                                <li class="pure-menu-item"><a href="{{url_for(event_sel_endpoint, **url_args)}}" class="pure-menu-link">{{ event['name'] }}</a></li>
+{% endfor %}
+                            </ul>
+                        </li>
+{% endfor %}
                     </ul>
                 </li>
                 <li class="pure-menu-item pure-menu-item-separator"></li>
