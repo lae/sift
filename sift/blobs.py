@@ -95,6 +95,24 @@ class HistoryRank(object):
         history = c.fetchall()
         return history
 
+class EventMeta(object):
+    @region.cache_on_arguments(namespace=region.key)
+    def get(self, event_id):
+        c = get_db()
+        c.execute(
+            "SELECT * from event_meta WHERE event_id = %(event_id)s",
+            {'event_id': event_id}
+        )
+        results = c.fetchall()
+        return results
+
+    @region.cache_on_arguments(namespace=region.key)
+    def get_all(self):
+        c = get_db()
+        c.execute("SELECT * from event_meta")
+        results = c.fetchall()
+        return results
+
 class Cutoff(object):
     @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, cutoff_marks):

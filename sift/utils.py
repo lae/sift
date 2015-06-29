@@ -4,6 +4,7 @@ import psycopg2
 import psycopg2.extras
 from flask import g
 
+
 def connect_db():
     """Connects to SIF DB"""
     conn = psycopg2.connect(sift.config['DATABASE_URI'])
@@ -16,3 +17,8 @@ def get_db():
         g.pg_db = connect_db()
     return g.pg_db
 
+@sift.teardown_appcontext
+def close_db(error):
+    """Closes the db connection"""
+    if hasattr(g, 'pg_db'):
+        g.pg_db.close()

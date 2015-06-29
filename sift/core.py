@@ -6,20 +6,21 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from .boot import sift
 from .blobs import *
 
-@sift.teardown_appcontext
-def close_db(error):
-    """Closes the db connection"""
-    if hasattr(g, 'pg_db'):
-        g.pg_db.close()
 
 @sift.route('/')
 def index():
     page = 0
     event_id = sift.config['CURRENT_EVENT_ID']
     limit = sift.config['LADDER_LIMIT']
+
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
+
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
+
     split_data = [data[i*limit//4: (i+1)*limit//4] for i in range(4)]
     return render_template('list_rankings.html', data=split_data, page=page, event_id=event_id)
 
@@ -31,17 +32,28 @@ def list_rankings(event_id):
         page = 0
 
     limit = sift.config['LADDER_LIMIT']
+
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
+
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
+
     split_data = [data[i*limit//4: (i+1)*limit//4] for i in range(4)]
     return render_template('list_rankings.html', data=split_data, page=page, event_id=event_id)
 
 @sift.route('/history/<int:event_id>/user/<int:user_id>')
 def history_user(event_id, user_id):
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
+
     data = HistoryUser().get(event_id, user_id)
     if not data:
         abort(404)
+
     entries = len(data)
     if entries < 20:
         column_count = 1
@@ -54,9 +66,14 @@ def history_user(event_id, user_id):
 
 @sift.route('/history/<int:event_id>/rank/<int:rank>')
 def history_rank(event_id, rank):
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
+
     data = HistoryRank().get(event_id, rank)
     if not data:
         abort(404)
+
     entries = len(data)
     if entries < 20:
         column_count = 1
@@ -69,6 +86,10 @@ def history_rank(event_id, rank):
 
 @sift.route('/cutoff/<int:event_id>')
 def list_cutoffs(event_id):
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
+
     data = list(reversed(Cutoff().get(event_id, sift.config['CURRENT_EVENT_CUTOFF_MARKS'])))
     if not data:
         abort(404)
@@ -87,6 +108,10 @@ def search():
         event_id = int(request.args['event'])
     else:
         event_id = sift.config['CURRENT_EVENT_ID']
+
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        abort(404)
 
     data = SearchUser().get(event_id, query)
     if not data:
