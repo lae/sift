@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set event_sel_endpoint = request.endpoint %}
+{% set event_sel_endpoint = "list_rankings" %}
 {% block header_extra %}
 {% if page > 0 %}
                 <li class="pure-menu-item"><a href="{{url_for('list_rankings', event_id=event_id, page=page-1)}}" class="pure-menu-link navigation-arrow">◀ {{ 100*page-1 }}位</a></li>
