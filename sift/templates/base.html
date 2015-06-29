@@ -31,11 +31,15 @@
                         <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                             <a href="#" class="pure-menu-link">{{ round_name }}</a>
                             <ul class="pure-menu-children pure-menu-children-push-right">
-{% for event_item in round %}
-{% set url_args = {"event_id": event_item.id} %}
-{% set _dummy = url_args.update(event_sel_extra_args) %}
+    {% for event_item in round %}
+        {% set url_args = {"event_id": event_item.id} %}
+        {% set _dummy = url_args.update(event_sel_extra_args) %}
+        {% if filter_events is defined and event_item.id not in filter_events %}
+                                <li class="pure-menu-item"><span class="pure-menu-info pure-menu-strike">{{ event_item.name }}</span></li>
+        {% else %}
                                 <li class="pure-menu-item"><a href="{{ url_for(event_sel_endpoint, **url_args) }}" class="pure-menu-link">{{ event_item.name }}</a></li>
-{% endfor %}
+        {% endif %}
+    {% endfor %}
                             </ul>
                         </li>
 {% endfor %}

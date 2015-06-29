@@ -148,6 +148,10 @@ body {
     border: 1px solid rgba(0,0,0,0);
 }
 
+.pure-menu-strike {
+    text-decoration: line-through;
+}
+
 .pure-form input[type="search"].tracker-user-search {
     border-radius: 0;
 }

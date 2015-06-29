@@ -81,6 +81,10 @@ def history_user(event_id, user_id):
     if not event_info:
         abort(404)
 
+    valid_events = HistoryUserEvents().get(user_id)
+    if not valid_events or event_id not in valid_events:
+        abort(404)
+
     data = HistoryUser().get(event_id, user_id)
     if not data:
         abort(404)
@@ -99,6 +103,7 @@ def history_user(event_id, user_id):
         data = split_data,
         user_id = user_id,
         column_count = column_count,
+        filter_events = valid_events,
         event = event_info[0]
     )
 

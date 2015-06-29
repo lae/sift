@@ -77,6 +77,22 @@ class HistoryUser(object):
         history = c.fetchall()
         return history
 
+class HistoryUserEvents(object):
+    @region.cache_on_arguments(namespace=region.key)
+    def get(self, user_id):
+        c = get_db()
+        c.execute(
+            "SELECT event_id FROM " \
+                "(SELECT DISTINCT event_id FROM rankings_mv_playercount " \
+                    "ORDER BY event_id) v(sel_event)," \
+            "lateral (SELECT event_id FROM rankings " \
+                "WHERE event_id = sel_event "\
+                "AND user_id = %(user_id)s LIMIT 1) s",
+            {'user_id': user_id}
+        )
+        events = [row['event_id'] for row in c.fetchall()]
+        return events
+
 class HistoryRank(object):
     @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, rank):
@@ -158,15 +174,3 @@ class Revision(object):
     def get(self):
         return self.revision()
 
-
-"""
-class HistoryUserEvents(object):
-    @region.cache_on_arguments(expiration_time=14400)
-    def get_history_user_events(self, user_id):
-        c = new_cursor()
-        c.execute("SELECT s.* FROM (SELECT * FROM generate_series(3, (SELECT max(event_id) FROM rankings))) u(ev), lateral (SELECT event_id FROM rankings WHERE event_id = ev AND user_id = %(user_id)s LIMIT 1) s", {'user_id': user_id})
-        events = c.fetchall()
-        return events
-
-    def on_get(self, req, resp, user_id):
-"""
