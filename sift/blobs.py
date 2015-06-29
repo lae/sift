@@ -58,10 +58,10 @@ class SearchUser(object):
                 "(SELECT MAX(step) FROM rankings " \
                     "WHERE event_id = %(event_id)s) " \
                 "AND lower(name) LIKE %(search)s " \
-            "ORDER BY rank LIMIT 500",
+            "ORDER BY rank",
             {'event_id': event_id, 'search': '%'+search.lower()+'%'}
         )
-        results = c.fetchall()
+        results = c.fetchmany(500)
         return results
 
 class HistoryUser(object):

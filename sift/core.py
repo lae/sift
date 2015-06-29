@@ -78,7 +78,7 @@ def list_cutoffs(event_id):
 def search():
     if 'q' in request.args:
         query = request.args['q']
-        if len(query) < 2 or '%' in query:
+        if len(query) == 0 or '%' in query:
             abort(418)
     else:
         abort(404)
