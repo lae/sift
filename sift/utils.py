@@ -6,7 +6,7 @@ import sift
 
 def connect_db():
     """Connects to SIF DB"""
-    conn = psycopg2.connect("dbname=sifjptracker host=/tmp")
+    conn = psycopg2.connect(sift.config['DATABASE_URI'])
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     return cur
 

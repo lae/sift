@@ -5,19 +5,12 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 from .reverse_proxy import ReverseProxied
 from .blobs import *
+from .config import configure_app
 
-sift = Flask(__name__)
+sift = Flask(__name__, instance_relative_config=True)
 sift.wsgi_app = ReverseProxied(sift.wsgi_app)
-sift.config.from_object(__name__)
 
-# Load default config and override config from an environment variable
-sift.config.update(dict(
-    SECRET_KEY='GwqqNjR7m2jU8rTosPUFhu9HH1tBf51nhBg1t914nSXgj1uEMIu2veeS3AezL4zB',
-    USERNAME='lae',
-    PASSWORD='idk',
-    CURRENT_EVENT_ID=52,
-    CURRENT_EVENT_CUTOFF_MARKS=[1,10000,50000,120000,250000]
-))
+configure_app(sift)
 
 @sift.teardown_appcontext
 def close_db(error):
@@ -29,7 +22,7 @@ def close_db(error):
 def index():
     page = 0
     event_id = sift.config['CURRENT_EVENT_ID']
-    limit = 100
+    limit = sift.config['LADDER_LIMIT']
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
@@ -43,7 +36,7 @@ def list_rankings(event_id):
     else:
         page = 0
 
-    limit = 100
+    limit = sift.config['LADDER_LIMIT']
     data = Ranking().get(event_id, limit, page)
     if not data:
         abort(404)
