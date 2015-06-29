@@ -57,7 +57,18 @@
         <div style="text-align: center;" class="tracker-box">ベータです　ー　This is a beta.</div>
     </div>
 </div>
+
 {% block body %}{% endblock %}
+
+<div class="pure-g tracker-wrapper">
+    <div class="pure-u-2-3 tracker-container">
+        <div style="text-align: center;" class="tracker-box">質問や問題がある場合は、<a href="https://twitter.com/sleepingkyoto" class="tracker-link">@sleepingkyoto</a>を連絡してください。</div>
+    </div>
+    <div class="pure-u-1-3 tracker-container">
+        <div style="text-align: center;" class="tracker-box">siftracker rev#{{ revision }}</div>
+    </div>
+</div>
+
 {% include "piwik.html" %}
     </body>
 </html>

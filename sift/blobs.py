@@ -150,6 +150,15 @@ class Cutoff(object):
         return cutoffs
 
 
+class Revision(object):
+    def revision(self):
+        import subprocess
+        return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip().decode("utf-8")
+
+    def get(self):
+        return self.revision()
+
+
 """
 class HistoryUserEvents(object):
     @region.cache_on_arguments(expiration_time=14400)

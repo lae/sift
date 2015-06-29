@@ -23,6 +23,10 @@ def event_menu():
             event_menu[group].append(event_item)
     return dict(event_menu=event_menu)
 
+@sift.context_processor
+def get_revision():
+    return dict(revision=Revision().get())
+
 @sift.route('/')
 def index():
     page = 0
@@ -140,16 +144,6 @@ def search():
         data = []
     return render_template('search_results.html', data=data, query=query, event_id=event_id)
 
-
-class Revision(object):
-    def revision(self):
-        import subprocess
-        return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip().decode("utf-8")
-
-    def on_get(self, req, resp):
-        resp.body = json.dumps({"revision": self.revision()})
-
-#api = application = falcon.API(middleware = ReverseProxy())
 
 if __name__ == '__main__':
     app.run()
