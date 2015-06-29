@@ -7,6 +7,7 @@ class Config(object):
     DEBUG = False
     DATABASE_URI = "sqlite://:memory:"
     MEMCACHE_ENABLED = False
+    MEMCACHE_KEY = 'sift'
 
 class DevelopmentConfig(Config):
     DEBUG = True

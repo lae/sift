@@ -11,20 +11,29 @@ if sift.config['MEMCACHE_ENABLED']:
         arguments = {
             'url':["127.0.0.1:11211"],
             'binary': True,
-            'behaviors':{"tcp_nodelay": True,"ketama":True}
+            'distributed_lock': True,
+            'behaviors': {
+                "tcp_nodelay": True,
+                "ketama": True
+            }
         }
     )
+    if 'MEMCACHE_KEY' not in sift.config:
+        region.key = 'sift'
+    else:
+        region.key = sift.config['MEMCACHE_KEY']
 else:
     region = make_region().configure(
         'dogpile.cache.null'
     )
+    region.key = "null"
 
 class Ranking(object):
     def __init__(self):
         self.default_limit = 100
         self.max_limit = 1000
 
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, limit, page):
         c = get_db()
         c.execute("SELECT rank,name,user_id,score FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) ORDER BY rank LIMIT %(limit)s OFFSET %(offset)s", {'event_id': event_id, 'limit': limit, 'offset': page * limit})
@@ -32,7 +41,7 @@ class Ranking(object):
         return rankings
 
 class SearchUser(object):
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, search):
         c = get_db()
         c.execute("SELECT event_id, rank, user_id, name FROM rankings WHERE event_id = %(event_id)s AND step = (SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) AND lower(name) LIKE %(search)s ORDER BY rank", {'event_id': event_id, 'search': '%'+search.lower()+'%'})
@@ -40,7 +49,7 @@ class SearchUser(object):
         return results
 
 class HistoryUser(object):
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, user_id):
         c = get_db()
         c.execute("SELECT step,rank,name,score FROM rankings WHERE event_id = %(event_id)s AND user_id = %(user_id)s ORDER BY step", {'event_id': event_id, 'user_id': user_id})
@@ -48,7 +57,7 @@ class HistoryUser(object):
         return history
 
 class HistoryRank(object):
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, rank):
         c = get_db()
         c.execute("SELECT s.* FROM (SELECT step FROM rankings_mv_playercount WHERE event_id = %(event_id)s AND players >= %(rank)s ORDER BY step) v(desired_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= %(rank)s AND step = desired_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'rank': rank})
@@ -56,7 +65,7 @@ class HistoryRank(object):
         return history
 
 class Cutoff(object):
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, cutoff_marks):
         c = get_db()
         c.execute("SELECT desired_rank, s.* FROM unnest(%(ranks)s) u(desired_rank), (SELECT step, players FROM rankings_mv_playercount WHERE event_id = %(event_id)s ORDER BY step) v(desired_step, players_in_current_step), lateral (SELECT step, score, name FROM rankings WHERE event_id = %(event_id)s AND rank <= desired_rank AND step = desired_step AND desired_rank <= players_in_current_step ORDER BY rank DESC LIMIT 1) s ORDER BY s.step", {'event_id': event_id, 'ranks': cutoff_marks})
