@@ -42,7 +42,7 @@ class Ranking(object):
             "SELECT r.rank, p.name, r.user_id, r.score FROM ("
                 "SELECT * FROM event_rankings "
                 "WHERE event_id = %(event_id)s AND step = ("
-                    "SELECT max(step) FROM erpc WHERE event_id = %(event_id)s"
+                    "SELECT max(step) FROM event_pc WHERE event_id = %(event_id)s"
                 ") "
                 "ORDER BY rank LIMIT %(limit)s OFFSET %(offset)s"
             ") r, "
@@ -65,7 +65,7 @@ class SearchUser(object):
             ") AS pl,"
             "lateral (SELECT rank, score FROM event_rankings "
                 "WHERE event_id = %(event_id)s AND step = ("
-                    "SELECT max(step) FROM erpc WHERE event_id = %(event_id)s"
+                    "SELECT max(step) FROM event_pc WHERE event_id = %(event_id)s"
                 ") AND user_id = pl.user_id) as ev "
             "ORDER BY rank",
             {'event_id': event_id, 'search': '%'+search.lower()+'%'}
@@ -92,7 +92,7 @@ class HistoryUserEvents(object):
         c = get_db()
         c.execute(
             "SELECT event_id FROM ("
-                "SELECT event_id, max(step) FROM erpc "
+                "SELECT event_id, max(step) FROM event_pc "
                 "GROUP BY event_id ORDER BY event_id"
             ") v(sel_event, sel_step), "
             "lateral (SELECT event_id FROM event_rankings "
@@ -109,7 +109,7 @@ class HistoryRank(object):
         c = get_db()
         c.execute(
             "SELECT p.name, r.user_id, r.step, r.score FROM ("
-                "SELECT step FROM erpc "
+                "SELECT step FROM event_pc "
                 "WHERE event_id = %(event_id)s AND players >= %(rank)s "
                 "ORDER BY step"
             ") v(desired_step), "
@@ -162,7 +162,7 @@ class Cutoff(object):
         c.execute(
             "SELECT sel_rank, s.* FROM unnest(%(ranks)s) u(sel_rank), " \
             # Grab a list of steps from selected event along with player count
-            "(SELECT step, players FROM erpc " \
+            "(SELECT step, players FROM event_pc " \
                 "WHERE event_id = %(event_id)s ORDER BY step) " \
                 "v(sel_step, sel_step_players), " \
             # and then try to match the closest rank we want, since ties cause
