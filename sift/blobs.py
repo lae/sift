@@ -39,10 +39,14 @@ class Ranking(object):
     def get(self, event_id, limit, page):
         c = get_db()
         c.execute(
-            "SELECT rank,name,user_id,score FROM rankings " \
-            "WHERE event_id = %(event_id)s AND step = " \
-            "(SELECT MAX(step) FROM rankings WHERE event_id = %(event_id)s) " \
-            "ORDER BY rank LIMIT %(limit)s OFFSET %(offset)s",
+            "SELECT r.rank, p.name, r.user_id, r.score FROM ("
+                "SELECT * FROM event_rankings "
+                "WHERE event_id = %(event_id)s AND step = ("
+                    "SELECT max(step) FROM erpc WHERE event_id = %(event_id)s"
+                ") "
+                "ORDER BY rank LIMIT %(limit)s OFFSET %(offset)s"
+            ") r, "
+            "lateral (SELECT name FROM players WHERE user_id = r.user_id) p",
             {'event_id': event_id, 'limit': limit, 'offset': page * limit}
         )
         rankings = c.fetchall()
@@ -53,11 +57,16 @@ class SearchUser(object):
     def get(self, event_id, search):
         c = get_db()
         c.execute(
-            "SELECT event_id, rank, user_id, name FROM rankings " \
-            "WHERE event_id = %(event_id)s AND step = " \
-                "(SELECT MAX(step) FROM rankings " \
-                    "WHERE event_id = %(event_id)s) " \
-                "AND lower(name) LIKE %(search)s " \
+            "SELECT %(event_id)s as event_id, ev.rank, pl.user_id, pl.name FROM ("
+                "SELECT user_id, name FROM players AS p WHERE EXISTS ("
+                    "SELECT * FROM (SELECT unnest(p.name_history)) nh(name) "
+                    "WHERE lower(nh.name) LIKE %(search)s"
+                ") "
+            ") AS pl,"
+            "lateral (SELECT rank, score FROM event_rankings "
+                "WHERE event_id = %(event_id)s AND step = ("
+                    "SELECT max(step) FROM erpc WHERE event_id = %(event_id)s"
+                ") AND user_id = pl.user_id) as ev "
             "ORDER BY rank",
             {'event_id': event_id, 'search': '%'+search.lower()+'%'}
         )
@@ -69,7 +78,7 @@ class HistoryUser(object):
     def get(self, event_id, user_id):
         c = get_db()
         c.execute(
-            "SELECT step,rank,name,score FROM rankings " \
+            "SELECT step, rank, score FROM event_rankings "
             "WHERE event_id = %(event_id)s AND user_id = %(user_id)s " \
             "ORDER BY step",
             {'event_id': event_id, 'user_id': user_id}
@@ -82,11 +91,12 @@ class HistoryUserEvents(object):
     def get(self, user_id):
         c = get_db()
         c.execute(
-            "SELECT event_id FROM " \
-                "(SELECT DISTINCT event_id FROM rankings_mv_playercount " \
-                    "ORDER BY event_id) v(sel_event)," \
-            "lateral (SELECT event_id FROM rankings " \
-                "WHERE event_id = sel_event "\
+            "SELECT event_id FROM ("
+                "SELECT event_id, max(step) FROM erpc "
+                "GROUP BY event_id ORDER BY event_id"
+            ") v(sel_event, sel_step), "
+            "lateral (SELECT event_id FROM event_rankings "
+                "WHERE event_id = sel_event AND step = sel_step "
                 "AND user_id = %(user_id)s LIMIT 1) s",
             {'user_id': user_id}
         )
@@ -98,14 +108,19 @@ class HistoryRank(object):
     def get(self, event_id, rank):
         c = get_db()
         c.execute(
-            "SELECT s.* FROM (SELECT step FROM rankings_mv_playercount " \
-                "WHERE event_id = %(event_id)s AND players >= %(rank)s " \
-                "ORDER BY step) v(desired_step), " \
-            "lateral (SELECT step, score, name FROM rankings " \
-                "WHERE event_id = %(event_id)s AND rank <= %(rank)s " \
-                "AND step = desired_step " \
-                "ORDER BY rank DESC LIMIT 1) s " \
-            "ORDER BY s.step",
+            "SELECT p.name, r.user_id, r.step, r.score FROM ("
+                "SELECT step FROM erpc "
+                "WHERE event_id = %(event_id)s AND players >= %(rank)s "
+                "ORDER BY step"
+            ") v(desired_step), "
+            "lateral ("
+                "SELECT user_id, step, score FROM event_rankings "
+                "WHERE event_id = %(event_id)s AND rank <= %(rank)s "
+                "AND step = desired_step "
+                "ORDER BY rank DESC LIMIT 1"
+            ") r, "
+            "lateral (SELECT name FROM players WHERE user_id = r.user_id) p "
+            "ORDER BY r.step",
             {'event_id': event_id, 'rank': rank}
         )
         history = c.fetchall()
@@ -136,13 +151,13 @@ class Cutoff(object):
         c.execute(
             "SELECT sel_rank, s.* FROM unnest(%(ranks)s) u(sel_rank), " \
             # Grab a list of steps from selected event along with player count
-            "(SELECT step, players FROM rankings_mv_playercount " \
+            "(SELECT step, players FROM erpc " \
                 "WHERE event_id = %(event_id)s ORDER BY step) " \
                 "v(sel_step, sel_step_players), " \
             # and then try to match the closest rank we want, since ties cause
             # duplicate rank numbers (and skips numbers), if the number of
             # players is greater than the rank we want
-            "lateral (SELECT step, score, name FROM rankings " \
+            "lateral (SELECT step, score FROM event_rankings " \
                 "WHERE event_id = %(event_id)s AND rank <= sel_rank " \
                     "AND step = sel_step AND sel_rank <= sel_step_players " \
                 "ORDER BY rank DESC LIMIT 1) s " \
@@ -157,11 +172,11 @@ class Cutoff(object):
             tier = "tier_{}".format(cutoff_marks.index(int(item['sel_rank'])))
             score = item['score']
             step = item['step']
-            name = item['name']
+            #name = item['name']
             for s in cutoffs:
                 if s['step'] == step:
                     s[tier] = score
-                    s[tier+'_name'] = name
+                    #s[tier+'_name'] = name
         cutoffs = sorted(cutoffs, key=lambda cutoff: cutoff["step"])
         return cutoffs
 
