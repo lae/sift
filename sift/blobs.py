@@ -35,7 +35,7 @@ class Ranking(object):
         self.default_limit = 100
         self.max_limit = 1000
 
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_Ranking")
     def get(self, event_id, limit, page):
         c = get_db()
         c.execute(
@@ -53,7 +53,7 @@ class Ranking(object):
         return rankings
 
 class SearchUser(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_SearchUser")
     def get(self, event_id, search):
         c = get_db()
         c.execute(
@@ -74,7 +74,7 @@ class SearchUser(object):
         return results
 
 class HistoryUser(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_HistoryUser")
     def get(self, event_id, user_id):
         c = get_db()
         c.execute(
@@ -87,7 +87,7 @@ class HistoryUser(object):
         return history
 
 class HistoryUserEvents(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_HistoryUserEvents")
     def get(self, user_id):
         c = get_db()
         c.execute(
@@ -104,7 +104,7 @@ class HistoryUserEvents(object):
         return events
 
 class HistoryRank(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_HistoryRank")
     def get(self, event_id, rank):
         c = get_db()
         c.execute(
@@ -127,7 +127,7 @@ class HistoryRank(object):
         return history
 
 class EventMeta(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_EventMeta")
     def get(self, event_id):
         c = get_db()
         c.execute(
@@ -137,7 +137,7 @@ class EventMeta(object):
         results = c.fetchall()
         return results
 
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_EventMeta")
     def get_all(self):
         c = get_db()
         c.execute("SELECT * from event_meta ORDER BY id")
@@ -145,7 +145,7 @@ class EventMeta(object):
         return results
 
 class UserMeta(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_UserMeta")
     def get(self, user_id):
         c = get_db()
         c.execute(
@@ -156,7 +156,7 @@ class UserMeta(object):
         return results
 
 class Cutoff(object):
-    @region.cache_on_arguments(namespace=region.key)
+    @region.cache_on_arguments(namespace=region.key + "_Cutoff")
     def get(self, event_id, cutoff_marks):
         c = get_db()
         c.execute(
