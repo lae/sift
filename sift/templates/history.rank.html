@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% set event_sel_endpoint = request.endpoint %}
 {% set event_sel_extra_args = {"rank": rank} %}
+{% set page_title = "%s位推移 - %s" % (rank, event.name) %}
 {% block header_extra %}
                 <li class="pure-menu-item"><span class="pure-menu-info">順位 {{ rank }}</span></li>
 {% endblock %}
