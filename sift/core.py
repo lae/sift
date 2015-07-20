@@ -107,6 +107,32 @@ def history_user(event_id, user_id):
         event = event_info[0]
     )
 
+@sift.route('/history/user/<int:user_id>')
+def history_user_events(user_id):
+    event_id = sift.config['CURRENT_EVENT_ID']
+
+    event_info = EventMeta().get(event_id)
+    if not event_info:
+        # Current event should always exist and this won't be a client error
+        abort(500)
+
+    valid_events = HistoryUserEvents().get(user_id)
+    if not valid_events:
+        abort(404)
+
+    data = HistoryUser().get(user_id)
+    if not data:
+        abort(404)
+
+
+    return render_template(
+        'history.user.html',
+        data = data,
+        user_id = user_id,
+        filter_events = valid_events
+    )
+
+
 @sift.route('/history/<int:event_id>/rank/<int:rank>')
 def history_rank(event_id, rank):
     event_info = EventMeta().get(event_id)
