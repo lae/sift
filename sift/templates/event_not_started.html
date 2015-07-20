@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set event_sel_endpoint = "list_rankings" %}
+{% block header_extra %}
+{% endblock header_extra %}
+{% block body %}
+<div class="tracker-cutoffs-wrapper pure-g">
+    <div class="pure-u-1 tracker-container">
+        <div class="tracker-box" style="padding: 1em;">
+            Sorry, no data has been recorded for this event yet.<br />
+            すみません、このイベントのデータをまだ保蔵してませんでした。<br />
+            Please wait an hour or two after the event has started.<br />
+            イベントが始まり1時間か2時間後を待っていてください。
+        </div>
+    </div>
+</div>
+
+{% endblock %}
