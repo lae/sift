@@ -144,6 +144,17 @@ class EventMeta(object):
         results = c.fetchall()
         return results
 
+class UserMeta(object):
+    @region.cache_on_arguments(namespace=region.key)
+    def get(self, user_id):
+        c = get_db()
+        c.execute(
+            "SELECT * from players WHERE user_id = %(user_id)s",
+            {'user_id': user_id}
+        )
+        results = c.fetchall()
+        return results
+
 class Cutoff(object):
     @region.cache_on_arguments(namespace=region.key)
     def get(self, event_id, cutoff_marks):

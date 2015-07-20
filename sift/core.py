@@ -2,6 +2,7 @@
 import os
 import json
 import collections
+import math
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 from .boot import sift
@@ -81,6 +82,10 @@ def history_user(event_id, user_id):
     if not event_info:
         abort(404)
 
+    user_info = UserMeta().get(user_id)
+    if not user_info:
+        abort(404)
+
     valid_events = HistoryUserEvents().get(user_id)
     if not valid_events or event_id not in valid_events:
         abort(404)
@@ -95,16 +100,17 @@ def history_user(event_id, user_id):
     elif entries <= 40:
         column_count = 2
     else:
-        column_count = 3
+        column_count = 4
 
-    split_data = [data[i*entries//column_count: (i+1)*entries//column_count] for i in range(column_count)]
+    split_data = [data[math.ceil(i*entries/column_count): math.ceil((i+1)*entries/column_count)] for i in range(column_count)]
     return render_template(
         'history.user.html',
         data = split_data,
         user_id = user_id,
         column_count = column_count,
         filter_events = valid_events,
-        event = event_info[0]
+        event = event_info[0],
+        user = user_info[0]
     )
 
 @sift.route('/history/user/<int:user_id>')
