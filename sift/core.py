@@ -69,7 +69,7 @@ def list_rankings(event_id):
 
     data = Ranking().get(event_id, limit, page)
     if not data:
-        if event_id = sift.config['CURRENT_EVENT_ID']:
+        if event_id == sift.config['CURRENT_EVENT_ID']:
             return render_template(
                 'event_not_started.html',
                 event = event_info[0]
@@ -156,7 +156,7 @@ def history_rank(event_id, rank):
 
     data = HistoryRank().get(event_id, rank)
     if not data:
-        if event_id = sift.config['CURRENT_EVENT_ID']:
+        if event_id == sift.config['CURRENT_EVENT_ID']:
             return render_template(
                 'event_not_started.html',
                 event = event_info[0]
@@ -192,7 +192,7 @@ def list_cutoffs(event_id):
     data = Cutoff().get(event_id, borders)
     data = list(reversed(data))
     if not data:
-        if event_id = sift.config['CURRENT_EVENT_ID']:
+        if event_id == sift.config['CURRENT_EVENT_ID']:
             return render_template(
                 'event_not_started.html',
                 event = event_info[0]
