@@ -40,7 +40,10 @@ def index():
 
     data = Ranking().get(event_id, limit, page)
     if not data:
-        abort(404)
+        return render_template(
+            'event_not_started.html',
+            event = event_info[0]
+        )
 
     split_data = [data[i*limit//4: (i+1)*limit//4] for i in range(4)]
     return render_template(
