@@ -2,7 +2,7 @@
 {% set event_sel_endpoint = request.endpoint %}
 {% set event_sel_extra_args = {"rank": rank} %}
 {% block header_extra %}
-                <li class="pure-menu-item"><span class="pure-menu-info">順位 {{ rank }}</span></li>
+                <li class="pure-menu-item"><span class="pure-menu-info">Rank {{ rank }}</span></li>
 {% endblock %}
 {% block body %}
 <div class="tracker-wrapper split-into-columns pure-g">
@@ -12,9 +12,9 @@
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th class="tracker-column-hour">経過時間</th>
-                        <th>名</th>
-                        <th class="tracker-column-score">スコア</th>
+                        <th class="tracker-column-hour">Hour</th>
+                        <th>Name</th>
+                        <th class="tracker-column-score">Score</th>
                     </tr>
                 </thead>
                 <tbody>

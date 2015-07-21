@@ -7,7 +7,7 @@
             <table class="tracker-table">
                 <thead>
                     <tr>
-                        <th class="tracker-column-hour">経過時間</th>
+                        <th class="tracker-column-hour">Hour</th>
 {% for tier in tiers %}
                         <th><a href="{{url_for('history_rank', event_id=event.event_id, rank=borders[tier])}}" class="tracker-link">{{ borders[tier] }}位</a></th>
 {% endfor %}
