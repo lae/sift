@@ -23,7 +23,7 @@
 {% for result in data %}
                     <tr>
                         <td><a class="tracker-link" href="{{url_for('history_user', event_id=result.event_id, user_id=result.user_id)}}">{{result.name}}</a></td>
-                        <td>{{ result.friend_id }}</td>
+                        <td>{{ "{0:09d}".format(result.friend_id) }}</td>
                         <td>{{ result.rank }}</td>
                     </tr>
 {% endfor %}
