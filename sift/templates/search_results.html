@@ -15,6 +15,7 @@
                 <thead>
                     <tr>
                         <th>名</th>
+                        <th>友達ID</th>
                         <th>順位</th>
                     </tr>
                 </thead>
@@ -22,7 +23,8 @@
 {% for result in data %}
                     <tr>
                         <td><a class="tracker-link" href="{{url_for('history_user', event_id=result.event_id, user_id=result.user_id)}}">{{result.name}}</a></td>
-                        <td>{{result.rank}}</td>
+                        <td>{{ result.friend_id }}</td>
+                        <td>{{ result.rank }}</td>
                     </tr>
 {% endfor %}
                 </tbody>

@@ -57,16 +57,16 @@ class SearchUser(object):
     def get(self, event_id, search):
         c = get_db()
         c.execute(
-            "SELECT %(event_id)s as event_id, ev.rank, pl.user_id, pl.name FROM ("
-                "SELECT user_id, name FROM players AS p WHERE EXISTS ("
+            "SELECT %(event_id)s as event_id, ev.rank, pl.user_id, pl.name, pl.friend_id FROM ("
+                "SELECT user_id, name, friend_id FROM players AS p WHERE EXISTS ("
                     "SELECT * FROM (SELECT unnest(p.name_history)) nh(name) "
                     "WHERE lower(nh.name) LIKE %(search)s"
                 ") "
-            ") AS pl,"
-            "lateral (SELECT rank, score FROM event_rankings "
+            ") AS pl "
+            "LEFT OUTER JOIN (SELECT rank, score, user_id FROM event_rankings "
                 "WHERE event_id = %(event_id)s AND step = ("
                     "SELECT max(step) FROM event_pc WHERE event_id = %(event_id)s"
-                ") AND user_id = pl.user_id) as ev "
+                ")) as ev ON (ev.user_id = pl.user_id) "
             "ORDER BY rank",
             {'event_id': event_id, 'search': '%'+search.lower()+'%'}
         )
@@ -108,7 +108,7 @@ class HistoryRank(object):
     def get(self, event_id, rank):
         c = get_db()
         c.execute(
-            "SELECT p.name, r.user_id, r.step, r.score FROM ("
+            "SELECT p.name, p.friend_id, r.user_id, r.step, r.score FROM ("
                 "SELECT step FROM event_pc "
                 "WHERE event_id = %(event_id)s AND players >= %(rank)s "
                 "ORDER BY step"
@@ -119,7 +119,7 @@ class HistoryRank(object):
                 "AND step = desired_step "
                 "ORDER BY rank DESC LIMIT 1"
             ") r, "
-            "lateral (SELECT name FROM players WHERE user_id = r.user_id) p "
+            "lateral (SELECT name, friend_id FROM players WHERE user_id = r.user_id) p "
             "ORDER BY r.step",
             {'event_id': event_id, 'rank': rank}
         )
