@@ -58,6 +58,8 @@ def index():
 def list_rankings(event_id):
     if 'page' in request.args:
         page = int(request.args['page'])
+        if page < 0:
+            return "Page needs to be a positive number."
     else:
         page = 0
 
